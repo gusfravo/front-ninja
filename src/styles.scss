@@ -3,3 +3,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@theme {
+  --color-mint-500: #F5F6FA;
+    --font-poppins: Poppins, sans-serif;
+
+}
