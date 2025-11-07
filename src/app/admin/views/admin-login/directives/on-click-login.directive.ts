@@ -1,5 +1,6 @@
 import { Directive, HostListener } from "@angular/core";
 import { AdminLoginFormService } from "../services/admin-login-form.service";
+import { LoginApiService } from "@shared/services/api/login-api.service";
 
 @Directive({
   selector: '[onClickLogin]',
@@ -7,11 +8,17 @@ import { AdminLoginFormService } from "../services/admin-login-form.service";
 })
 export class OnClickLoginDirective {
 
-  constructor(private readonly loginFormService: AdminLoginFormService) { }
+  constructor(private readonly loginFormService: AdminLoginFormService,
+    private readonly loginApiService: LoginApiService) { }
 
   @HostListener('click', ['$event'])
   onclick() {
     const loginData = this.loginFormService.loginSignal();
+    this.loginApiService.onLogin(loginData).subscribe(
+      data => {
+        console.log(data);
+      }
+    )
     console.log(loginData);
   }
 }
