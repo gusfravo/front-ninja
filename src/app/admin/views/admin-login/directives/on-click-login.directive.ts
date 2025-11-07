@@ -3,6 +3,8 @@ import { AdminLoginFormService } from "../services/admin-login-form.service";
 import { LoginApiService } from "@shared/services/api/login-api.service";
 import { AuthService } from "../../../../core/auth/service/auth.service";
 import { SessionService } from "../../../../core/auth/service/session.service";
+import { RouterPathAdmin } from "@shared/enums/router-path-admin.enum";
+import { Router } from "@angular/router";
 
 @Directive({
   selector: '[onClickLogin]',
@@ -13,7 +15,8 @@ export class OnClickLoginDirective {
   constructor(private readonly loginFormService: AdminLoginFormService,
     private readonly loginApiService: LoginApiService,
     private readonly authService: AuthService,
-    private readonly sessionService: SessionService) { }
+    private readonly sessionService: SessionService,
+    private readonly router: Router) { }
 
   @HostListener('click', ['$event'])
   onclick() {
@@ -30,7 +33,8 @@ export class OnClickLoginDirective {
           token_type: data.tokenType
         });
 
-        console.log(data);
+        const { dashboard } = RouterPathAdmin;
+        this.router.navigate([dashboard], { replaceUrl: true })
       }
     )
     console.log(loginData);
