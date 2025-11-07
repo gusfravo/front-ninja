@@ -1,34 +1,35 @@
-            <div>
-              <label
-                for="usuario"
-                class="mb-1 block text-sm font-medium text-slate-700"
-                >Usuario</label
-              >
-              <input
-                id="usuario"
-                name="usuario"
-                type="text"
-                autocomplete="username"
-                required
-                class="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Tu usuario"
-              />
-            </div>
+<div [formGroup]="loginFormGroup">
+<div>
+  <label
+    for="usuario"
+    class="mb-1 block text-sm font-medium text-slate-700">Usuario</label>
+      <input
+        id="usuario"
+        name="usuario"
+        type="text"
+        autocomplete="username"
+        required
+        class="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        placeholder="Tu usuario"
+        formControlName="username"
+        />
+</div>
 
             <!-- Contraseña -->
-            <div>
-              <label
-                for="password"
-                class="mb-1 block text-sm font-medium text-slate-700"
-                >Contraseña</label
-              >
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autocomplete="current-password"
-                required
-                class="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="••••••••"
-              />
-            </div>
+<div>
+  <label
+    for="password"
+    class="mb-1 block text-sm font-medium text-slate-700">Contraseña</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        required
+        class="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        placeholder="••••••••"
+        formControlName="password"
+  />
+</div>
+
+</div>

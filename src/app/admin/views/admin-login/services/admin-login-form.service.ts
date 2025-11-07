@@ -1,6 +1,6 @@
 import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { login } from '../../../../shared/domain';
-import { Login } from '../../../../shared/models/banner.constant';
+import { Login } from '@shared/models/login.constant';
 
 @Injectable({
   providedIn: 'root'
