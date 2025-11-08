@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { BenefitApiService } from '../shared/benefits-api.service';
 import { Subject, take, takeUntil, tap } from 'rxjs';
 import { BenefitInterface } from '@shared/interfaces';
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-catalog-benefits',
   imports: [
-    NgFor,
     NgIf,
     RouterLink
   ],
