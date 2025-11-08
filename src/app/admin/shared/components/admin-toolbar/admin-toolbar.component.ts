@@ -2,13 +2,14 @@ import { MenuInterface } from '@admin/shared/interfaces/menu.interface';
 import { MenuSignalService } from '@admin/shared/services/menu-signal.service';
 import { NgClass } from '@angular/common';
 import { Component, Signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-admin-toolbar',
   imports: [
     RouterOutlet,
     NgClass,
+    RouterLink
   ],
   templateUrl: './admin-toolbar.component.html',
   styleUrl: './admin-toolbar.component.scss',

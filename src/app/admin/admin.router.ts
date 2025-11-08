@@ -15,6 +15,11 @@ export const adminRouter: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/admin/platform/dashboard'
+      },
+      {
         path: 'dashboard',
         loadComponent: () => import('./views/admin-dashboard/admin-dashboard.component').then(c => c.AdminDashboardComponent),
       }, {
