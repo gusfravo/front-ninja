@@ -3,14 +3,15 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { BenefitInterface } from '@shared/interfaces';
 import { BenefitApiService } from '../../shared/benefits-api.service';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil, tap } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { RouterPathAdmin } from '@shared/enums/router-path-admin.enum';
 
 @Component({
   selector: 'app-admin-catalog-benefits-update',
   imports: [
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './admin-catalog-benefits-update.component.html',
   styleUrl: './admin-catalog-benefits-update.component.scss'
