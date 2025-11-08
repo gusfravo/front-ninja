@@ -1,7 +1,7 @@
 import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { EventInterface } from '@shared/interfaces/event.interface';
+import { EventInterface, EventResponse } from '@shared/interfaces/event.interface';
 import { Subject, take, takeUntil, tap } from 'rxjs';
 import { EventApiService } from '../shared/event-api.service';
 
@@ -16,7 +16,7 @@ import { EventApiService } from '../shared/event-api.service';
 })
 export class AdminCatalogEventsComponent {
   unsubscribe = new Subject();
-  instanceList: EventInterface[] = [];
+  instanceList: EventResponse[] = [];
 
   constructor(private readonly eventApiService: EventApiService) { }
 

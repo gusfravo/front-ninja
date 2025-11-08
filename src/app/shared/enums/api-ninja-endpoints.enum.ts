@@ -3,5 +3,7 @@ export enum ApiNinjaEndpoints {
   benefitList = 'benefit/list',
   benefitUpdate = 'benefit/update',
   benefitGet = 'benefit/get/',
-  eventList = 'event/list'
+  eventList = 'event/list',
+  eventGet = 'event/get/',
+  eventUpdate = 'event/update'
 }

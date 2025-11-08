@@ -42,13 +42,16 @@
               @for (item of instanceList; track item.uuid; let i = $index;) {
                 <tr class="hover:bg-slate-50">
                   <td class="py-2 px-3">{{i+1}}</td>
+                  <td class="py-2 px-3">{{item.benefit.name}}</td>
+                  <td class="py-2 px-3">{{item.start_date}}</td>
+                  <td class="py-2 px-3">{{item.end_date}}</td>
                   <td class="py-2 px-3">{{item.status}}</td>
                   <td class="py-2 px-3">
                     <span class="rounded-full bg-green-100 text-green-700 px-2 py-0.5 text-xs" *ngIf="item.status">Activo</span>
                     <span class="rounded-full bg-yellow-100 text-yellow-700 px-2 py-0.5 text-xs" *ngIf="!item.status">Desactivado</span>
                   </td>
                   <td class="py-2 px-3 flex gap-2">
-                    <button class="rounded-md bg-yellow-500 px-3 py-1 text-white text-xs hover:bg-yellow-600" [routerLink]="'/admin/platform/catalog/benefit/update/'+item.uuid">Editar</button>
+                    <button class="rounded-md bg-yellow-500 px-3 py-1 text-white text-xs hover:bg-yellow-600" [routerLink]="'/admin/platform/catalog/events/update/'+item.uuid">Editar</button>
                     <button class="rounded-md bg-red-500 px-3 py-1 text-white text-xs hover:bg-red-600">Borrar</button>
                   </td>
                 </tr>
