@@ -3,12 +3,14 @@ import { BenefitApiService } from '../shared/benefits-api.service';
 import { Subject, take, takeUntil, tap } from 'rxjs';
 import { BenefitInterface } from '@shared/interfaces';
 import { NgFor, NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-catalog-benefits',
   imports: [
     NgFor,
-    NgIf
+    NgIf,
+    RouterLink
   ],
   templateUrl: './admin-catalog-benefits.component.html',
   styleUrl: './admin-catalog-benefits.component.scss'

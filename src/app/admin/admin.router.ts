@@ -26,6 +26,9 @@ export const adminRouter: Routes = [
         path: 'catalog/benefit',
         loadComponent: () => import('./views/catalogs/admin-catalog-benefits/admin-catalog-benefits.component').then(c => c.AdminCatalogBenefitsComponent)
       }, {
+        path: 'catalog/benefit/update/:uuid',
+        loadComponent: () => import('./views/catalogs/admin-catalog-benefits/admin-catalog-benefits-update/admin-catalog-benefits-update.component').then(c => c.AdminCatalogBenefitsUpdateComponent)
+      }, {
         path: 'role',
         loadComponent: () => import('./views/admin-role/admin-role.component').then(c => c.AdminRoleComponent),
       }, {
