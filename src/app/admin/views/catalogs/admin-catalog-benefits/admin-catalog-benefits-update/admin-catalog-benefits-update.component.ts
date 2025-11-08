@@ -45,7 +45,6 @@ export class AdminCatalogBenefitsUpdateComponent {
       debounceTime(400),
       distinctUntilChanged(),
       tap(data => {
-        console.log(data);
         this.object.name = data.name;
       })
     ).subscribe()
@@ -72,7 +71,6 @@ export class AdminCatalogBenefitsUpdateComponent {
       debounceTime(400),
       distinctUntilChanged(),
       tap(data => {
-        console.log("saved", data);
         const { benefits } = RouterPathAdmin;
         this.router.navigate([benefits], { replaceUrl: true })
       })
