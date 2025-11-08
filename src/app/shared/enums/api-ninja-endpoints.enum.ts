@@ -1,3 +1,5 @@
 export enum ApiNinjaEndpoints {
-  login = 'auth/login'
+  login = 'auth/login',
+  benefitList = 'benefit/list',
+  benefitUpdate = 'benefit/update'
 }

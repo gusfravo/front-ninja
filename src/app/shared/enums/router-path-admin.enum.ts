@@ -1,3 +1,4 @@
 export enum RouterPathAdmin {
-  dashboard = '/admin/platform/dashboard'
+  dashboard = '/admin/platform/dashboard',
+  benefits = '/admin/platform/catalog/benefits'
 }

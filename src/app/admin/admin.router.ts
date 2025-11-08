@@ -23,6 +23,9 @@ export const adminRouter: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./views/admin-dashboard/admin-dashboard.component').then(c => c.AdminDashboardComponent),
       }, {
+        path: 'catalog/benefit',
+        loadComponent: () => import('./views/catalogs/admin-catalog-benefits/admin-catalog-benefits.component').then(c => c.AdminCatalogBenefitsComponent)
+      }, {
         path: 'role',
         loadComponent: () => import('./views/admin-role/admin-role.component').then(c => c.AdminRoleComponent),
       }, {
