@@ -10,16 +10,20 @@ export const adminRouter: Routes = [
     path: 'login',
     loadComponent: () => import('./views/admin-login/admin-login.component').then(c => c.AdminLoginComponent)
   }, {
-    path: 'dashboard',
-    loadComponent: () => import('./views/admin-dashboard/admin-dashboard.component').then(c => c.AdminDashboardComponent),
+    path: 'platform',
+    loadComponent: () => import('./shared/components/admin-toolbar/admin-toolbar.component').then(c => c.AdminToolbarComponent),
     canActivate: [AuthGuard],
-  }, {
-    path: 'role',
-    loadComponent: () => import('./views/admin-role/admin-role.component').then(c => c.AdminRoleComponent),
-    canActivate: [AuthGuard],
-  }, {
-    path: 'excel',
-    loadComponent: () => import('./views/admin-excel/admin-excel.component').then(c => c.AdminExcelComponent),
-    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./views/admin-dashboard/admin-dashboard.component').then(c => c.AdminDashboardComponent),
+      }, {
+        path: 'role',
+        loadComponent: () => import('./views/admin-role/admin-role.component').then(c => c.AdminRoleComponent),
+      }, {
+        path: 'excel',
+        loadComponent: () => import('./views/admin-excel/admin-excel.component').then(c => c.AdminExcelComponent),
+      }
+    ]
   }
 ]
