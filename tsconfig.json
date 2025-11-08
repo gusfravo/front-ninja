@@ -24,6 +24,9 @@
       "@admin/*": [
         "./src/app/admin/*"
       ],
+      "@core/*": [
+        "./src/app/core/*"
+      ],
     },
   },
   "angularCompilerOptions": {
