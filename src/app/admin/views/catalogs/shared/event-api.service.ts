@@ -26,7 +26,10 @@ export class EventApiService {
   }
 
   public onUploadFileExcel(data: EventExcelFile) {
-    return this.http.post(URL + ApiNinjaEndpoints.eventUpload, data, this.secury)
+    const formData = new FormData();
+    formData.append('file', data.file, Date.now() + '_' + data.file.name.replace(/ /g, "_"));
+    formData.append('eventId', data.eventId)
+    return this.http.post(URL + ApiNinjaEndpoints.eventUpload, formData, this.secury)
   }
 
   public onGetSheets(data: { eventId: string }) {
@@ -37,4 +40,7 @@ export class EventApiService {
     return this.http.post(URL + ApiNinjaEndpoints.eventExcelExecute, data, this.secury)
   }
 
+  public onFindExcel(data: { eventId: string }) {
+    return this.http.post(URL + ApiNinjaEndpoints.eventExcelFind, data, this.secury)
+  }
 }

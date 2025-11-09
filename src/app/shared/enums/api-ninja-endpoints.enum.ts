@@ -8,5 +8,6 @@ export enum ApiNinjaEndpoints {
   eventUpdate = 'event/update',
   eventUpload = 'event/upload',
   eventExcelGetSheets = 'eventExcel/getSheets',
-  eventExcelExecute = 'eventExcel/execute'
+  eventExcelExecute = 'eventExcel/execute',
+  eventExcelFind = 'eventExcel/findByEvent'
 }
