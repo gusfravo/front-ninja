@@ -23,3 +23,13 @@ export interface EventUpdateInterface {
   endDate: string,
   benefitId: string
 }
+
+export interface EventExcelFile {
+  eventId: string,
+  file: File
+}
+
+export interface EventExcelFileProcess {
+  eventId: string,
+  sheetName: string
+}

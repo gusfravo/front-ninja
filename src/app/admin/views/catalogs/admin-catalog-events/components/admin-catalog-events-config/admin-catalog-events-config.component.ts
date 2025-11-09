@@ -1,7 +1,7 @@
 import { EventApiService } from '@admin/views/catalogs/shared/event-api.service';
 import { Component, Input } from '@angular/core';
 import { EventInterface, EventResponse } from '@shared/interfaces/event.interface';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-admin-catalog-events-config',
@@ -17,6 +17,11 @@ export class AdminCatalogEventsConfigComponent {
   error: string | null = null;
   readonly MAX_SIZE = 5 * 1024 * 1024; // 5 MB
   unsubscribe = new Subject();
+  metadata = {
+    fileUploated: false
+  }
+
+  sheetNames$ = Observable<string[]>
 
   constructor(private readonly eventApiService: EventApiService) {
 
@@ -66,6 +71,13 @@ export class AdminCatalogEventsConfigComponent {
       this.error = 'Selecciona un archivo primero';
       return;
     }
+    return this.eventApiService.onUploadFileExcel({ file: this.file, eventId: this.object.uuid }).pipe(
+      takeUntil(this.unsubscribe),
+      tap(_ => {
+        this.metadata.fileUploated = true;
+        this.sheetNames$ = this.eventApiService.onGetSheets({ eventId: this.object.uuid });
+      })
+    ).subscribe()
     /*
     this.uploadService.uploadFile(this.file).subscribe({
       next: res => console.log('subida ok', res),
