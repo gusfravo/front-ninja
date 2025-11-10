@@ -43,4 +43,8 @@ export class EventApiService {
   public onFindExcel(data: { eventId: string }) {
     return this.http.post(URL + ApiNinjaEndpoints.eventExcelFind, data, this.secury)
   }
+
+  public onFindFile(data: { eventId: string }) {
+    return this.http.get(URL + ApiNinjaEndpoints.eventGetFileWithDeletations + data.eventId, this.secury)
+  }
 }

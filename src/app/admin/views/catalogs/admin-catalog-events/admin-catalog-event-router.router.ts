@@ -13,5 +13,8 @@ export const adminCatalogEventRouter: Routes = [
   }, {
     path: 'workshop',
     loadComponent: () => import('./components/admin-catalog-events-workshop/admin-catalog-events-workshop.component').then(c => c.AdminCatalogEventsWorkshopComponent)
+  }, {
+    path: 'workshop/process/:uuid',
+    loadComponent: () => import('./components/admin-catalog-events-process/admin-catalog-events-process.component').then(c => c.AdminCatalogEventsProcessComponent)
   }
 ];

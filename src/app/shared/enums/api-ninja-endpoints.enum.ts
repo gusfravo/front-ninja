@@ -9,5 +9,6 @@ export enum ApiNinjaEndpoints {
   eventUpload = 'event/upload',
   eventExcelGetSheets = 'eventExcel/getSheets',
   eventExcelExecute = 'eventExcel/execute',
-  eventExcelFind = 'eventExcel/findByEvent'
+  eventExcelFind = 'eventExcel/findByEvent',
+  eventGetFileWithDeletations = 'event/files/'
 }
