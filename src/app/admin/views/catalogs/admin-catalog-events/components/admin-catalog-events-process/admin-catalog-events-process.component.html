@@ -13,7 +13,7 @@
               placeholder="Buscar una prestación..."
               class="rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            <button class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700" routerLink="/admin/platform/catalog/events/workshop/process/file/created/new">+ Nueva entrada</button>
+            <button class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700" routerLink="/admin/platform/catalog/events/workshop/file/{{uuid}}/new">+ Nueva entrada</button>
           </div>
         </div>
 
@@ -35,7 +35,7 @@
                   <td class="py-2 px-3">{{item.delegation.name}}</td>
                   <td class="py-2 px-3 flex gap-2">
                     <button class="rounded-md bg-blue-500 px-3 py-1 text-white text-xs hover:bg-blue-600"
-                    [routerLink]="'/admin/platform/catalog/events/workshop/process/file/created/'+item.uuid">Editar</button>
+                    [routerLink]="'/admin/platform/catalog/events/workshop/file'+uuid+'/created/'+item.uuid">Editar</button>
                   </td>
                 </tr>
               }

@@ -1,5 +1,5 @@
 import { AdminCatalogEventsProcessModalComponent } from '@admin/views/catalogs/shared/components/admin-catalog-events-process-modal/admin-catalog-events-process-modal.component';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Dialog, DIALOG_DATA, DialogModule } from '@angular/cdk/dialog';
 
@@ -16,12 +16,13 @@ import { Dialog, DIALOG_DATA, DialogModule } from '@angular/cdk/dialog';
   styleUrl: './admin-catalog-events-process-update.component.scss'
 })
 export class AdminCatalogEventsProcessUpdateComponent {
-
-
+  @Input() uuid!: string;
+  @Input() eventUuid!: string;
   constructor(private readonly dialog: Dialog) { }
 
   ngOnInit() {
-    this.initLoad();
+    if (this.uuid == 'new')
+      this.initLoad();
   }
 
   initLoad() {
