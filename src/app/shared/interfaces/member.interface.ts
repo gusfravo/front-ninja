@@ -8,5 +8,5 @@ export interface MemberResponse {
   status: boolean,
   isRealMember: boolean,
   department: string,
-  secreatary: string
+  secretary: string
 }

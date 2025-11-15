@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { IS_TOKENENABLED } from '@core/auth/context/auth.context';
 import { URL } from '@shared/constants/url.constant';
 import { ApiNinjaEndpoints } from '@shared/enums/api-ninja-endpoints.enum';
+import { EventFileResponse } from '@shared/interfaces';
 import { EventExcelFile, EventExcelFileProcess, EventInterface, EventResponse, EventUpdateInterface } from '@shared/interfaces/event.interface';
 
 
@@ -45,6 +46,6 @@ export class EventApiService {
   }
 
   public onFindFile(data: { eventId: string }) {
-    return this.http.get(URL + ApiNinjaEndpoints.eventGetFileWithDeletations + data.eventId, this.secury)
+    return this.http.get<EventFileResponse[]>(URL + ApiNinjaEndpoints.eventGetFileWithDeletations + data.eventId, this.secury)
   }
 }
