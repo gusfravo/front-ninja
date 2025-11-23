@@ -10,5 +10,6 @@ export enum ApiNinjaEndpoints {
   eventExcelGetSheets = 'eventExcel/getSheets',
   eventExcelExecute = 'eventExcel/execute',
   eventExcelFind = 'eventExcel/findByEvent',
-  eventGetFileWithDeletations = 'event/files/'
+  eventGetFileWithDeletations = 'event/files/',
+  delegationList = 'delegation/list/'
 }

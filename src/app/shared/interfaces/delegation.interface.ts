@@ -9,3 +9,8 @@ export interface DelegationResponse {
   dependence: DependenceResponse,
   titular: MemberResponse
 }
+
+export interface DelegationRequestList {
+  dependenceId: string | null,
+  name: string
+}
