@@ -48,4 +48,8 @@ export class EventApiService {
   public onFindFile(data: { eventId: string }) {
     return this.http.get<EventFileResponse[]>(URL + ApiNinjaEndpoints.eventGetFileWithDeletations + data.eventId, this.secury)
   }
+
+  public onSaveEventFile(data: { eventId: string; delegationId: string; uuid?: string }) {
+    return this.http.post<EventFileResponse>(URL + ApiNinjaEndpoints.eventFileUpdate, data, this.secury)
+  }
 }

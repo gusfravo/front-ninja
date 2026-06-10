@@ -1,20 +1,47 @@
-  <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 animate-fade-in scale-95 animate-scale-up">
+<div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
 
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-semibold text-gray-800">Nuevo Registro de entrega</h2>
-      <button class="text-gray-500 hover:text-gray-700" onclick="closeModal()">✕</button>
-    </div>
-
-    <!-- Body -->
-    <div>
-      <p class="text-gray-600">Completa los datos del formulario requeridos.</p>
-    </div>
-
-    <!-- Actions -->
-    <div class="mt-6 flex justify-end gap-3">
-      <button class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition" onclick="closeModal()">Cancelar</button>
-      <button class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">Aceptar</button>
-    </div>
-
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-semibold text-gray-800">
+      {{ isEdit ? 'Editar Registro' : 'Nuevo Registro de Entrega' }}
+    </h2>
+    <button class="text-gray-500 hover:text-gray-700" (click)="onCancel()">✕</button>
   </div>
+
+  <!-- Body -->
+  <div class="space-y-4">
+    <p class="text-gray-600 text-sm">Selecciona la delegación para este registro.</p>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Delegación</label>
+      <select
+        [(ngModel)]="selectedDelegationId"
+        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      >
+        <option value="" disabled>-- Selecciona una delegación --</option>
+        @for (delegation of (delegationList$ | async); track delegation.uuid) {
+          <option [value]="delegation.uuid">{{ delegation.name }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="mt-6 flex justify-end gap-3">
+    <button
+      class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition text-sm"
+      (click)="onCancel()"
+      [disabled]="loading"
+    >
+      Cancelar
+    </button>
+    <button
+      class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition text-sm disabled:opacity-50"
+      (click)="onSave()"
+      [disabled]="!selectedDelegationId || loading"
+    >
+      {{ loading ? 'Guardando...' : 'Aceptar' }}
+    </button>
+  </div>
+
+</div>
