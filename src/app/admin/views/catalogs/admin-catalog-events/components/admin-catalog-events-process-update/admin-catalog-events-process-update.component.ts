@@ -51,6 +51,19 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
   readonly additionalKeys = ['Documentos', 'INE', 'Carta compromiso'];
   additionalByMember: Record<string, EventMemberAdditionalDataResponse[]> = {};
 
+  filterName = '';
+  filterUuid = '';
+
+  get filteredMemberList(): EventMemberResponse[] {
+    const name = this.filterName.trim().toLowerCase();
+    const uuid = this.filterUuid.trim().toLowerCase();
+    return this.memberList.filter((m) => {
+      const matchName = !name || m.full_name?.toLowerCase().includes(name);
+      const matchUuid = !uuid || m.uuid.toLowerCase().includes(uuid);
+      return matchName && matchUuid;
+    });
+  }
+
   private readonly searchInput$ = new Subject<string>();
   private readonly unsubscribe = new Subject<void>();
 
