@@ -31,7 +31,6 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
   ) {}
 
   ngOnInit() {
-    this.initLoad();
   }
 
   initLoad() {
