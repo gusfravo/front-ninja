@@ -32,7 +32,6 @@ export class AdminCatalogEventsProcessComponent {
       takeUntil(this.unsubscribe),
       tap(data => {
         this.instanceList = data;
-        console.log(this.instanceList);
       })
     ).subscribe()
   }

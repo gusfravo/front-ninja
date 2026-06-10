@@ -19,5 +19,8 @@ export const adminCatalogEventRouter: Routes = [
   }, {
     path: 'workshop/file/:eventUuid/:uuid',
     loadComponent: () => import('./components/admin-catalog-events-process-update/admin-catalog-events-process-update.component').then(c => c.AdminCatalogEventsProcessUpdateComponent)
+  }, {
+    path: 'workshop/members/:eventUuid',
+    loadComponent: () => import('./components/admin-catalog-events-members-general/admin-catalog-events-members-general.component').then(c => c.AdminCatalogEventsMembersGeneralComponent)
   }
 ];
