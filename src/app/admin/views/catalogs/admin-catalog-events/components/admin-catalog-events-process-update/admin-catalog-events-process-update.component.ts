@@ -3,6 +3,7 @@ import { DelegationApiService } from '@admin/views/catalogs/shared/delegation-ap
 import { EventApiService } from '@admin/views/catalogs/shared/event-api.service';
 import { MemberApiService } from '@admin/views/catalogs/shared/member-api.service';
 import { NgFor, NgIf } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -43,6 +44,7 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
   loadingSearch = false;
   loadingSave = false;
   showDropdown = false;
+  errorMessage: string | null = null;
 
   private readonly searchInput$ = new Subject<string>();
   private readonly unsubscribe = new Subject<void>();
@@ -123,8 +125,7 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
     this.searchTerm = member.full_name;
     this.showDropdown = false;
     this.searchResults = [];
-    console.log('Selected member:', member);
-    console.log("eventFile",this.eventFile);
+    this.errorMessage = null;
   }
 
   addMember() {
@@ -135,6 +136,7 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
     if (!dependenceId) return;
 
     this.loadingSave = true;
+    this.errorMessage = null;
     this.eventApiService.onSaveEventMember({
       eventFileId: this.eventFile.uuid,
       memberId: this.selectedMember.uuid,
@@ -150,7 +152,12 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
         this.memberList = [result, ...this.memberList];
         this.resetForm();
       }),
-    ).subscribe({ error: () => { this.loadingSave = false; } });
+    ).subscribe({
+      error: (err: HttpErrorResponse) => {
+        this.loadingSave = false;
+        this.errorMessage = err.error?.message ?? 'Ocurrió un error al agregar el miembro';
+      },
+    });
   }
 
   toggleApproved(item: EventMemberResponse) {
