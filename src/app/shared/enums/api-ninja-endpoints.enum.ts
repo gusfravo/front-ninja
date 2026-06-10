@@ -22,4 +22,7 @@ export enum ApiNinjaEndpoints {
   eventMemberGet = 'event-member/get/',
   eventMemberUpdate = 'event-member/update',
   eventMemberDelete = 'event-member/delete/',
+  eventMemberAdditionalList = 'event-member/additional/',
+  eventMemberAdditionalUpdate = 'event-member-additional/update',
+  eventMemberAdditionalDelete = 'event-member-additional/delete/',
 }

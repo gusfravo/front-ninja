@@ -1,3 +1,4 @@
+import { EventMemberAdditionalDataResponse } from "./event-member-additional-data.interface";
 import { DependenceResponse } from "./dependence.interface";
 import { EventFileResponse } from "./event-file.interface";
 import { EventResponse } from "./event.interface";
@@ -13,5 +14,6 @@ export interface EventMemberResponse {
   event: EventResponse,
   member: MemberResponse,
   dependence: DependenceResponse,
-  eventFile: EventFileResponse
+  eventFile: EventFileResponse,
+  additionalStates: EventMemberAdditionalDataResponse[]
 }

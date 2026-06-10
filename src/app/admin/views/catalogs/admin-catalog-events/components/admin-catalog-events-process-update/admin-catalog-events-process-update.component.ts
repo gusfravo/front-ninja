@@ -9,12 +9,14 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { DelegationResponse, EventFileResponse } from '@shared/interfaces';
+import { EventMemberAdditionalDataResponse } from '@shared/interfaces/event-member-additional-data.interface';
 import { EventMemberResponse } from '@shared/interfaces/event-member.interface';
 import { MemberResponse } from '@shared/interfaces/member.interface';
 import {
   Subject,
   debounceTime,
   distinctUntilChanged,
+  forkJoin,
   switchMap,
   takeUntil,
   tap,
@@ -45,6 +47,9 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
   loadingSave = false;
   showDropdown = false;
   errorMessage: string | null = null;
+
+  readonly additionalKeys = ['Documentos', 'INE', 'Carta compromiso'];
+  additionalByMember: Record<string, EventMemberAdditionalDataResponse[]> = {};
 
   private readonly searchInput$ = new Subject<string>();
   private readonly unsubscribe = new Subject<void>();
@@ -111,7 +116,60 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
   private loadMembers() {
     this.eventApiService.onListEventMembers(this.uuid).pipe(
       takeUntil(this.unsubscribe),
-      tap((members) => { this.memberList = members; }),
+      tap((members) => {
+        this.memberList = members;
+        this.initAdditionalFromMembers(members);
+      }),
+    ).subscribe();
+  }
+
+  private initAdditionalFromMembers(members: EventMemberResponse[]) {
+    members.forEach((m) => {
+      this.additionalByMember[m.uuid] = m.additionalStates ?? [];
+    });
+  }
+
+  getAdditionalState(memberId: string, key: string): EventMemberAdditionalDataResponse | undefined {
+    return this.additionalByMember[memberId]?.find((s) => s.key === key);
+  }
+
+  saveAdditional(member: EventMemberResponse, key: string, value: boolean) {
+    const existing = this.getAdditionalState(member.uuid, key);
+
+    if (!value && existing?.uuid) {
+      this.eventApiService.onDeleteEventMemberAdditional(existing.uuid).pipe(
+        takeUntil(this.unsubscribe),
+        tap(() => {
+          this.additionalByMember = {
+            ...this.additionalByMember,
+            [member.uuid]: (this.additionalByMember[member.uuid] ?? []).filter(
+              (s) => s.uuid !== existing.uuid,
+            ),
+          };
+        }),
+      ).subscribe();
+      return;
+    }
+
+    if (!value) return;
+
+    this.eventApiService.onSaveEventMemberAdditional({
+      uuid: existing?.uuid,
+      eventMemberId: member.uuid,
+      key,
+      value,
+    }).pipe(
+      takeUntil(this.unsubscribe),
+      tap((result) => {
+        const list = this.additionalByMember[member.uuid] ?? [];
+        const idx = list.findIndex((s) => s.uuid === result.uuid);
+        this.additionalByMember = {
+          ...this.additionalByMember,
+          [member.uuid]: idx !== -1
+            ? list.map((s) => (s.uuid === result.uuid ? result : s))
+            : [result, ...list],
+        };
+      }),
     ).subscribe();
   }
 
@@ -150,6 +208,7 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
       tap((result) => {
         this.loadingSave = false;
         this.memberList = [result, ...this.memberList];
+        this.additionalByMember = { [result.uuid]: [], ...this.additionalByMember };
         this.resetForm();
       }),
     ).subscribe({
@@ -180,10 +239,18 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
   }
 
   deleteMember(uuid: string) {
-    this.eventApiService.onDeleteEventMember(uuid).pipe(
+    const additionals = this.additionalByMember[uuid] ?? [];
+    const deleteAdditionals$ = additionals.length
+      ? forkJoin(additionals.map((a) => this.eventApiService.onDeleteEventMemberAdditional(a.uuid)))
+      : of([]);
+
+    deleteAdditionals$.pipe(
+      switchMap(() => this.eventApiService.onDeleteEventMember(uuid)),
       takeUntil(this.unsubscribe),
       tap(() => {
         this.memberList = this.memberList.filter((m) => m.uuid !== uuid);
+        const { [uuid]: _, ...rest } = this.additionalByMember;
+        this.additionalByMember = rest;
       }),
     ).subscribe();
   }

@@ -4,7 +4,8 @@ import { IS_TOKENENABLED } from '@core/auth/context/auth.context';
 import { URL } from '@shared/constants/url.constant';
 import { ApiNinjaEndpoints } from '@shared/enums/api-ninja-endpoints.enum';
 import { EventFileResponse } from '@shared/interfaces';
-import { EventExcelFile, EventExcelFileProcess, EventInterface, EventResponse, EventUpdateInterface } from '@shared/interfaces/event.interface';
+import { EventExcelFile, EventExcelFileProcess, EventResponse, EventUpdateInterface } from '@shared/interfaces/event.interface';
+import { EventMemberAdditionalDataResponse } from '@shared/interfaces/event-member-additional-data.interface';
 import { EventMemberResponse } from '@shared/interfaces/event-member.interface';
 
 
@@ -73,5 +74,32 @@ export class EventApiService {
 
   public onDeleteEventMember(uuid: string) {
     return this.http.delete<EventMemberResponse>(URL + ApiNinjaEndpoints.eventMemberDelete + uuid, this.secury);
+  }
+
+  public onListEventMemberAdditional(eventMemberId: string) {
+    return this.http.get<EventMemberAdditionalDataResponse[]>(
+      URL + ApiNinjaEndpoints.eventMemberAdditionalList + eventMemberId,
+      this.secury,
+    );
+  }
+
+  public onDeleteEventMemberAdditional(uuid: string) {
+    return this.http.delete<void>(
+      URL + ApiNinjaEndpoints.eventMemberAdditionalDelete + uuid,
+      this.secury,
+    );
+  }
+
+  public onSaveEventMemberAdditional(data: {
+    eventMemberId: string;
+    key: string;
+    value: boolean;
+    uuid?: string;
+  }) {
+    return this.http.post<EventMemberAdditionalDataResponse>(
+      URL + ApiNinjaEndpoints.eventMemberAdditionalUpdate,
+      data,
+      this.secury,
+    );
   }
 }
