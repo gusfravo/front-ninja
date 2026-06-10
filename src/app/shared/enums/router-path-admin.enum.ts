@@ -1,5 +1,6 @@
 export enum RouterPathAdmin {
   dashboard = '/admin/platform/dashboard',
   benefits = '/admin/platform/catalog/benefit',
-  events = '/admin/platform/catalog/events'
+  events = '/admin/platform/catalog/events',
+  delegations = '/admin/platform/catalog/delegation'
 }

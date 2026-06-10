@@ -32,6 +32,12 @@ export const adminRouter: Routes = [
         path: 'catalog/events',
         loadChildren: () => import('./views/catalogs/admin-catalog-events/admin-catalog-event-router.router').then(r => r.adminCatalogEventRouter)
       }, {
+        path: 'catalog/delegation',
+        loadComponent: () => import('./views/catalogs/admin-catalog-delegations/admin-catalog-delegations.component').then(c => c.AdminCatalogDelegationsComponent)
+      }, {
+        path: 'catalog/delegation/update/:uuid',
+        loadComponent: () => import('./views/catalogs/admin-catalog-delegations/components/admin-catalog-delegations-update/admin-catalog-delegations-update.component').then(c => c.AdminCatalogDelegationsUpdateComponent)
+      }, {
         path: 'role',
         loadComponent: () => import('./views/admin-role/admin-role.component').then(c => c.AdminRoleComponent),
       }, {

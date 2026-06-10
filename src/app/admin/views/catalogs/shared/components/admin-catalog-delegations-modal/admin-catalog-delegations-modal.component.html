@@ -1,0 +1,60 @@
+<div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-semibold text-gray-800">Nueva Delegación</h2>
+    <button class="text-gray-500 hover:text-gray-700" (click)="onCancel()">✕</button>
+  </div>
+
+  <div class="space-y-4" [formGroup]="formGroup">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Código</label>
+      <input
+        type="text"
+        formControlName="code"
+        placeholder="Ej. DEL-001"
+        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+      <input
+        type="text"
+        formControlName="name"
+        placeholder="Nombre de la delegación"
+        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Dependencia</label>
+      <select
+        formControlName="dependenceId"
+        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      >
+        <option value="" disabled>-- Selecciona una dependencia --</option>
+        @for (dep of dependenceList; track dep.uuid) {
+          <option [value]="dep.uuid">{{ dep.name }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="mt-6 flex justify-end gap-3">
+    <button
+      class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition text-sm"
+      (click)="onCancel()"
+      [disabled]="loading"
+    >
+      Cancelar
+    </button>
+    <button
+      class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition text-sm disabled:opacity-50"
+      (click)="onSave()"
+      [disabled]="formGroup.invalid || loading"
+    >
+      {{ loading ? 'Guardando...' : 'Crear' }}
+    </button>
+  </div>
+
+</div>

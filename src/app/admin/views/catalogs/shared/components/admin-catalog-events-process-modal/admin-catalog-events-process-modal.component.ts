@@ -1,40 +1,62 @@
 import { Component, inject } from '@angular/core';
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA, Dialog, DialogRef, DialogModule } from '@angular/cdk/dialog';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DelegationRequestList, DelegationResponse } from '@shared/interfaces';
-import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
 import { DelegationApiService } from '../../delegation-api.service';
 import { EventApiService } from '../../event-api.service';
+import { AdminCatalogDelegationsModalComponent } from '../admin-catalog-delegations-modal/admin-catalog-delegations-modal.component';
 
 @Component({
   selector: 'app-admin-catalog-events-process-modal',
-  imports: [AsyncPipe, FormsModule],
+  imports: [AsyncPipe, FormsModule, DialogModule],
   templateUrl: './admin-catalog-events-process-modal.component.html',
   styleUrl: './admin-catalog-events-process-modal.component.scss'
 })
 export class AdminCatalogEventsProcessModalComponent {
   private readonly data = inject<{ eventUuid: string; uuid?: string }>(DIALOG_DATA);
   private readonly dialogRef = inject(DialogRef);
+  private readonly dialog = inject(Dialog);
   private readonly unsubscribe = new Subject<void>();
 
-  delegationList$!: Observable<DelegationResponse[]>;
+  delegationList: DelegationResponse[] = [];
   selectedDelegationId = '';
   loading = false;
 
-  private readonly metadata: { listDelegation: DelegationRequestList } = {
-    listDelegation: { dependenceId: null, name: '' }
-  };
+  private readonly listFilter: DelegationRequestList = { dependenceId: null, name: '' };
 
   constructor(
     private readonly delegationApiService: DelegationApiService,
     private readonly eventApiService: EventApiService,
-  ) {
-    this.delegationList$ = this.delegationApiService.onList(this.metadata.listDelegation);
+  ) {}
+
+  ngOnInit() {
+    this.loadDelegations();
   }
 
   get isEdit(): boolean {
     return !!this.data?.uuid;
+  }
+
+  loadDelegations() {
+    this.delegationApiService.onList(this.listFilter).pipe(
+      takeUntil(this.unsubscribe),
+      tap(data => { this.delegationList = data; })
+    ).subscribe();
+  }
+
+  openCreateDelegation() {
+    const ref = this.dialog.open(AdminCatalogDelegationsModalComponent, {
+      minWidth: '380px',
+    });
+
+    ref.closed.pipe(takeUntil(this.unsubscribe)).subscribe((result) => {
+      if (result) {
+        this.loadDelegations();
+        this.selectedDelegationId = (result as DelegationResponse).uuid;
+      }
+    });
   }
 
   onCancel() {
@@ -46,6 +68,7 @@ export class AdminCatalogEventsProcessModalComponent {
     this.loading = true;
 
     const payload: { eventId: string; delegationId: string; uuid?: string } = {
+      uuid:'',
       eventId: this.data.eventUuid,
       delegationId: this.selectedDelegationId,
     };
