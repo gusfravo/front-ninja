@@ -16,5 +16,10 @@ export enum ApiNinjaEndpoints {
   delegationGet = 'delegation/get/',
   delegationDelete = 'delegation/delete/',
   eventFileUpdate = 'event/eventFiles/update',
-  dependenceList = 'dependence/list'
+  dependenceList = 'dependence/list',
+  memberListByName = 'member/list-by-name/',
+  eventMemberList = 'event-member/list/',
+  eventMemberGet = 'event-member/get/',
+  eventMemberUpdate = 'event-member/update',
+  eventMemberDelete = 'event-member/delete/',
 }

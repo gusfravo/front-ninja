@@ -6,6 +6,7 @@ import { MemberResponse } from "./member.interface";
 export interface EventMemberResponse {
   uuid: string,
   fullName: string,
+  full_name: string,
   observations: string,
   approved: boolean,
   status: boolean,

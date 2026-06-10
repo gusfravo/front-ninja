@@ -1,94 +1,142 @@
-    <!-- Contenido principal -->
     <div class="flex-1 flex flex-col">
       <main class="p-6 space-y-6">
 
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-4 rounded-xl shadow">
-      <div class="flex items-center gap-2">
-      </div>
+        <!-- Barra superior -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-4 rounded-xl shadow">
+          <div class="flex flex-col text-sm text-slate-600">
+            <span *ngIf="eventFile">
+              <span class="font-semibold">Delegación:</span>
+              {{ delegation?.name }}
+            </span>
+            <span *ngIf="eventFile">
+              <span class="font-semibold">Dependencia:</span>
+              {{ delegation?.dependence?.name }}
+            </span>
+          </div>
+          <button
+            class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+            [routerLink]="['/admin/platform/catalog/events/workshop/process', eventUuid]"
+          >
+            Regresar
+          </button>
+        </div>
 
-      <div class="flex items-center gap-2">
-        <button
-          class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
-          [routerLink]="['/admin/platform/catalog/events/workshop/process', eventUuid]"
-        >
-          Regresar
-        </button>
-      </div>
-    </div>
-
-        <!-- Contenedor de la tabla -->
-        <div class="rounded-xl bg-white p-4 shadow overflow-x-auto">
-          <h3 class="text-lg font-semibold text-slate-700 mb-4">Listado de Información</h3>
-          <table class="w-full border border-slate-300 text-sm">
-            <thead class="bg-slate-200">
+        <!-- Tabla Excel -->
+        <div class="rounded-xl bg-white shadow overflow-x-auto" style="height: 80vh;">
+          <table class="w-full border-collapse text-sm">
+            <thead class="bg-slate-100 text-slate-700">
               <tr>
-                <th class="border border-slate-300 px-3 py-2 text-left">ID</th>
-                <th class="border border-slate-300 px-3 py-2 text-left">Nombre</th>
-                <th class="border border-slate-300 px-3 py-2 text-left">Correo</th>
-                <th class="border border-slate-300 px-3 py-2 text-left">Rol</th>
-                <th class="border border-slate-300 px-3 py-2 text-left">Estado</th>
-                <th class="border border-slate-300 px-3 py-2 text-left">Fecha Registro</th>
+                <th class="border border-slate-300 px-3 py-2 text-center w-10">#</th>
+                <th class="border border-slate-300 px-3 py-2 text-left">Nombre completo</th>
+                <th class="border border-slate-300 px-3 py-2 text-left">Observaciones</th>
+                <th class="border border-slate-300 px-3 py-2 text-center w-24">Aprobado</th>
+                <th class="border border-slate-300 px-3 py-2 text-center w-24">Acciones</th>
               </tr>
-                        <!-- Fila editable con inputs -->
-          <tr class="bg-gray-100">
-            <td class="border p-1">
-              <input type="text" class="w-full border rounded p-1 text-sm" placeholder="ID">
-            </td>
-            <td class="border p-1">
-              <input type="text" class="w-full border rounded p-1 text-sm" placeholder="Nombre">
-            </td>
-            <td class="border p-1">
-              <input type="email" class="w-full border rounded p-1 text-sm" placeholder="Correo">
-            </td>
-            <td class="border p-1">
-              <select class="w-full border rounded p-1 text-sm">
-                <option>Administrador</option>
-                <option>Editor</option>
-                <option>Usuario</option>
-              </select>
-            </td>
-            <td class="border p-1 text-center">
-              <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm">
-                Guardar
-              </button>
-            </td>
-          </tr>
             </thead>
             <tbody>
-              <tr class="odd:bg-white even:bg-slate-50 hover:bg-indigo-50">
-                <td class="border border-slate-300 px-3 py-2">1</td>
-                <td class="border border-slate-300 px-3 py-2">Ana López</td>
-                <td class="border border-slate-300 px-3 py-2">anaexample.com</td>
-                <td class="border border-slate-300 px-3 py-2">Admin</td>
-                <td class="border border-slate-300 px-3 py-2">Activo</td>
-                <td class="border border-slate-300 px-3 py-2">2025-08-01</td>
+
+              <!-- Filas de miembros existentes -->
+              @for (item of memberList; track item.uuid; let i = $index) {
+                <tr class="hover:bg-indigo-50 transition-colors">
+                  <td class="border border-slate-200 px-3 py-2 text-center text-slate-500">{{ i + 1 }}</td>
+                  <td class="border border-slate-200 px-3 py-2 font-medium text-slate-800">{{ item.full_name }}</td>
+                  <td class="border border-slate-200 px-3 py-2 text-slate-600">{{ item.observations }}</td>
+                  <td class="border border-slate-200 px-3 py-2 text-center">
+                    <button
+                      (click)="toggleApproved(item)"
+                      [class]="item.approved
+                        ? 'w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center mx-auto hover:bg-green-600'
+                        : 'w-8 h-8 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center mx-auto hover:bg-slate-300'"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd"/>
+                      </svg>
+                    </button>
+                  </td>
+                  <td class="border border-slate-200 px-3 py-2 text-center">
+                    <button
+                      class="rounded bg-red-100 text-red-600 px-2 py-1 text-xs hover:bg-red-200"
+                      (click)="deleteMember(item.uuid)"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              }
+
+              <!-- Fila de búsqueda / agregar (siempre al final) -->
+              <tr class="bg-indigo-50">
+                <td class="border border-slate-300 px-3 py-2 text-center text-slate-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                  </svg>
+                </td>
+
+                <!-- Buscador con dropdown -->
+                <td class="border border-slate-300 px-2 py-2 relative">
+                  <input
+                    type="text"
+                    [(ngModel)]="searchTerm"
+                    (input)="onSearchInput()"
+                    placeholder="Buscar miembro por nombre..."
+                    class="w-full border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  />
+                  <!-- Dropdown resultados -->
+                  <div
+                    *ngIf="showDropdown"
+                    class="absolute left-2 right-2 top-full mt-1 bg-white border border-slate-200 rounded shadow-lg z-50 max-h-48 overflow-y-auto"
+                  >
+                    <div *ngIf="loadingSearch" class="px-3 py-2 text-slate-400 text-xs">Buscando...</div>
+                    <button
+                      *ngFor="let m of searchResults"
+                      class="w-full text-left px-3 py-2 text-sm hover:bg-indigo-50 border-b border-slate-100 last:border-0"
+                      (click)="selectMember(m)"
+                    >
+                      <span class="font-medium">{{ m.full_name }}</span>
+                      <span class="text-slate-400 text-xs ml-2">{{ m.rfc }}</span>
+                    </button>
+                  </div>
+                </td>
+
+                <!-- Observaciones -->
+                <td class="border border-slate-300 px-2 py-2">
+                  <input
+                    type="text"
+                    [(ngModel)]="newObservations"
+                    placeholder="Observaciones..."
+                    class="w-full border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  />
+                </td>
+
+                <!-- Aprobado -->
+                <td class="border border-slate-300 px-3 py-2 text-center">
+                  <button
+                    (click)="newApproved = !newApproved"
+                    [class]="newApproved
+                      ? 'w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center mx-auto hover:bg-green-600'
+                      : 'w-8 h-8 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center mx-auto hover:bg-slate-300'"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                  </button>
+                </td>
+
+                <!-- Botón agregar -->
+                <td class="border border-slate-300 px-3 py-2 text-center">
+                  <button
+                    [disabled]="!selectedMember || loadingSave"
+                    (click)="addMember()"
+                    class="rounded bg-indigo-600 text-white px-3 py-1 text-xs hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {{ loadingSave ? '...' : 'Agregar' }}
+                  </button>
+                </td>
               </tr>
-              <tr class="odd:bg-white even:bg-slate-50 hover:bg-indigo-50">
-                <td class="border border-slate-300 px-3 py-2">2</td>
-                <td class="border border-slate-300 px-3 py-2">Carlos Ruiz</td>
-                <td class="border border-slate-300 px-3 py-2">carlosexample.com</td>
-                <td class="border border-slate-300 px-3 py-2">Usuario</td>
-                <td class="border border-slate-300 px-3 py-2">Pendiente</td>
-                <td class="border border-slate-300 px-3 py-2">2025-08-05</td>
-              </tr>
-              <tr class="odd:bg-white even:bg-slate-50 hover:bg-indigo-50">
-                <td class="border border-slate-300 px-3 py-2">3</td>
-                <td class="border border-slate-300 px-3 py-2">María Pérez</td>
-                <td class="border border-slate-300 px-3 py-2">mariaexample.com</td>
-                <td class="border border-slate-300 px-3 py-2">Editor</td>
-                <td class="border border-slate-300 px-3 py-2">Inactivo</td>
-                <td class="border border-slate-300 px-3 py-2">2025-08-10</td>
-              </tr>
-              <tr class="odd:bg-white even:bg-slate-50 hover:bg-indigo-50">
-                <td class="border border-slate-300 px-3 py-2">4</td>
-                <td class="border border-slate-300 px-3 py-2">Luis Torres</td>
-                <td class="border border-slate-300 px-3 py-2">luisexample.com</td>
-                <td class="border border-slate-300 px-3 py-2">Usuario</td>
-                <td class="border border-slate-300 px-3 py-2">Activo</td>
-                <td class="border border-slate-300 px-3 py-2">2025-08-15</td>
-              </tr>
+
             </tbody>
           </table>
         </div>
+
       </main>
     </div>

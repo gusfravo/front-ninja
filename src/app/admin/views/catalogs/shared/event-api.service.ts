@@ -5,6 +5,7 @@ import { URL } from '@shared/constants/url.constant';
 import { ApiNinjaEndpoints } from '@shared/enums/api-ninja-endpoints.enum';
 import { EventFileResponse } from '@shared/interfaces';
 import { EventExcelFile, EventExcelFileProcess, EventInterface, EventResponse, EventUpdateInterface } from '@shared/interfaces/event.interface';
+import { EventMemberResponse } from '@shared/interfaces/event-member.interface';
 
 
 @Injectable({
@@ -51,5 +52,26 @@ export class EventApiService {
 
   public onSaveEventFile(data: { eventId: string; delegationId: string; uuid?: string }) {
     return this.http.post<EventFileResponse>(URL + ApiNinjaEndpoints.eventFileUpdate, data, this.secury)
+  }
+
+  public onListEventMembers(eventFileId: string) {
+    return this.http.get<EventMemberResponse[]>(URL + ApiNinjaEndpoints.eventMemberList + eventFileId, this.secury);
+  }
+
+  public onSaveEventMember(data: {
+    eventFileId: string;
+    memberId: string;
+    dependenceId: string;
+    full_name: string;
+    observations: string;
+    approved: boolean;
+    status: boolean;
+    uuid?: string;
+  }) {
+    return this.http.post<EventMemberResponse>(URL + ApiNinjaEndpoints.eventMemberUpdate, data, this.secury);
+  }
+
+  public onDeleteEventMember(uuid: string) {
+    return this.http.delete<EventMemberResponse>(URL + ApiNinjaEndpoints.eventMemberDelete + uuid, this.secury);
   }
 }

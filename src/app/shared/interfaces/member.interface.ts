@@ -1,6 +1,7 @@
 export interface MemberResponse {
   uuid: string,
   fullName: string,
+  full_name: string,
   rfc: string,
   birthDate: string,
   nom: string,
