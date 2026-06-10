@@ -1,5 +1,6 @@
 import { AdminCatalogEventsProcessModalComponent } from '@admin/views/catalogs/shared/components/admin-catalog-events-process-modal/admin-catalog-events-process-modal.component';
 import { EventApiService } from '@admin/views/catalogs/shared/event-api.service';
+import { EventMemberExcelApiService } from '@admin/views/catalogs/shared/event-member-excel-api.service';
 import { NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -24,6 +25,7 @@ export class AdminCatalogEventsProcessComponent {
 
   constructor(
     private readonly eventApiService: EventApiService,
+    private readonly eventMemberExcelApiService: EventMemberExcelApiService,
     private readonly dialog: Dialog,
   ) { }
 
@@ -53,6 +55,13 @@ export class AdminCatalogEventsProcessComponent {
         if (idx !== -1) this.instanceList[idx] = updated;
       }
     });
+  }
+
+  exportExcel(item: EventFileResponse) {
+    const delegationName = item.deletation?.name ?? (item as any).delegation?.name ?? 'export';
+    this.eventMemberExcelApiService.downloadByEventFile(item.uuid, delegationName).pipe(
+      takeUntil(this.unsubscribe),
+    ).subscribe();
   }
 
   ngOnDestroy() {

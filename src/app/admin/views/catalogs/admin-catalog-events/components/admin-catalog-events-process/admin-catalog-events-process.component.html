@@ -50,6 +50,8 @@
                     (click)="openEditModal(item)">Editar</button>
                     <button class="rounded-md bg-green-600 px-3 py-1 text-white text-xs hover:bg-green-700"
                     [routerLink]="'/admin/platform/catalog/events/workshop/file/'+uuid+'/'+item.uuid">Agregar agremiado</button>
+                    <button class="rounded-md bg-amber-500 px-3 py-1 text-white text-xs hover:bg-amber-600"
+                    (click)="exportExcel(item)">Exportar Excel</button>
                   </td>
                 </tr>
               }
