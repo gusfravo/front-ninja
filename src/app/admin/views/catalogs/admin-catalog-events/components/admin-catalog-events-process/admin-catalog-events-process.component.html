@@ -35,7 +35,7 @@
                   <td class="py-2 px-3">{{item.deletation.name}}</td>
                   <td class="py-2 px-3 flex gap-2">
                     <button class="rounded-md bg-blue-500 px-3 py-1 text-white text-xs hover:bg-blue-600"
-                    [routerLink]="'/admin/platform/catalog/events/workshop/file'+uuid+'/created/'+item.uuid">Editar</button>
+                    (click)="openEditModal(item)">Editar</button>
                   </td>
                 </tr>
               }

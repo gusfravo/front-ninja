@@ -15,7 +15,7 @@ import { AdminCatalogDelegationsModalComponent } from '../admin-catalog-delegati
   styleUrl: './admin-catalog-events-process-modal.component.scss'
 })
 export class AdminCatalogEventsProcessModalComponent {
-  private readonly data = inject<{ eventUuid: string; uuid?: string }>(DIALOG_DATA);
+  private readonly data = inject<{ eventUuid: string; uuid?: string; delegationUuid?: string }>(DIALOG_DATA);
   private readonly dialogRef = inject(DialogRef);
   private readonly dialog = inject(Dialog);
   private readonly unsubscribe = new Subject<void>();
@@ -42,7 +42,12 @@ export class AdminCatalogEventsProcessModalComponent {
   loadDelegations() {
     this.delegationApiService.onList(this.listFilter).pipe(
       takeUntil(this.unsubscribe),
-      tap(data => { this.delegationList = data; })
+      tap(data => {
+        this.delegationList = data;
+        if (this.data?.delegationUuid) {
+          this.selectedDelegationId = this.data.delegationUuid;
+        }
+      })
     ).subscribe();
   }
 
