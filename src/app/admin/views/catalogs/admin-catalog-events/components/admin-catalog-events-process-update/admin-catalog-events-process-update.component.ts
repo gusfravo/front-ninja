@@ -238,6 +238,27 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
     ).subscribe();
   }
 
+  saveObservations(item: EventMemberResponse, observations: string) {
+    if (observations === item.observations) return;
+
+    this.eventApiService.onSaveEventMember({
+      uuid: item.uuid,
+      eventFileId: this.uuid,
+      memberId: item.member.uuid,
+      dependenceId: item.dependence.uuid,
+      full_name: item.full_name,
+      observations,
+      approved: item.approved,
+      status: item.status,
+    }).pipe(
+      takeUntil(this.unsubscribe),
+      tap((result) => {
+        const idx = this.memberList.findIndex((m) => m.uuid === result.uuid);
+        if (idx !== -1) this.memberList[idx] = result;
+      }),
+    ).subscribe();
+  }
+
   deleteMember(uuid: string) {
     const additionals = this.additionalByMember[uuid] ?? [];
     const deleteAdditionals$ = additionals.length
