@@ -25,7 +25,14 @@
             >
               Ver todos los agremiados
             </button>
-            <button class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700" routerLink="/admin/platform/catalog/events/workshop/file/{{uuid}}/new">+ Nueva entrada</button>
+            <button
+              class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+              (click)="exportGeneralExcel()"
+            >Descargar Excel general</button>
+            <button
+              class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+              (click)="openNewModal()"
+            >+ Nueva entrada</button>
           </div>
         </div>
 

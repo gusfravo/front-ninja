@@ -33,8 +33,8 @@ export class OnClickLoginDirective {
           token_type: data.tokenType
         });
 
-        const { dashboard } = RouterPathAdmin;
-        this.router.navigate([dashboard], { replaceUrl: true })
+        const { workshop } = RouterPathAdmin;
+        this.router.navigate([workshop], { replaceUrl: true })
       }
     )
     console.log(loginData);

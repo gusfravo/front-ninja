@@ -11,6 +11,24 @@ export class EventMemberExcelApiService {
 
   constructor(private readonly http: HttpClient) {}
 
+  downloadByEvent(eventId: string) {
+    return this.http
+      .get(API_URL + ApiNinjaEndpoints.eventMemberExportEvent + eventId, {
+        ...this.secury,
+        responseType: 'blob',
+      })
+      .pipe(
+        tap((blob) => {
+          const objectUrl = window.URL.createObjectURL(blob);
+          const anchor = document.createElement('a');
+          anchor.href = objectUrl;
+          anchor.download = 'agremiados-general.xlsx';
+          anchor.click();
+          window.URL.revokeObjectURL(objectUrl);
+        }),
+      );
+  }
+
   downloadByEventFile(eventFileId: string, delegationName: string) {
     return this.http
       .get(API_URL + ApiNinjaEndpoints.eventMemberExport + eventFileId, {

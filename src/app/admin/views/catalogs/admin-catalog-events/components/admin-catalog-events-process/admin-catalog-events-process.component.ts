@@ -38,6 +38,17 @@ export class AdminCatalogEventsProcessComponent {
     ).subscribe()
   }
 
+  openNewModal() {
+    const ref = this.dialog.open(AdminCatalogEventsProcessModalComponent, {
+      minWidth: '300px',
+      data: { eventUuid: this.uuid },
+    });
+
+    ref.closed.pipe(takeUntil(this.unsubscribe)).subscribe((result) => {
+      if (result) this.instanceList = [result as EventFileResponse, ...this.instanceList];
+    });
+  }
+
   openEditModal(item: EventFileResponse) {
     const ref = this.dialog.open(AdminCatalogEventsProcessModalComponent, {
       minWidth: '300px',
@@ -55,6 +66,12 @@ export class AdminCatalogEventsProcessComponent {
         if (idx !== -1) this.instanceList[idx] = updated;
       }
     });
+  }
+
+  exportGeneralExcel() {
+    this.eventMemberExcelApiService.downloadByEvent(this.uuid).pipe(
+      takeUntil(this.unsubscribe),
+    ).subscribe();
   }
 
   exportExcel(item: EventFileResponse) {

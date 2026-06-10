@@ -78,6 +78,7 @@ export class AdminCatalogEventsProcessUpdateComponent implements OnInit, OnDestr
   ngOnInit() {
     this.initSearch();
     this.loadEventFile();
+    if(this.uuid === 'new') this.openModal(true);
   }
 
   private initSearch() {
