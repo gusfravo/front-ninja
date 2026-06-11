@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { AdminCatalogDelegationsModalComponent } from '@admin/views/catalogs/shared/components/admin-catalog-delegations-modal/admin-catalog-delegations-modal.component';
+import { AdminCatalogEventsProcessModalComponent } from '@admin/views/catalogs/shared/components/admin-catalog-events-process-modal/admin-catalog-events-process-modal.component';
 import { DelegationApiService } from '@admin/views/catalogs/shared/delegation-api.service';
 import { DependenceApiService } from '@admin/views/catalogs/shared/dependence-api.service';
 import { EventApiService } from '@admin/views/catalogs/shared/event-api.service';
@@ -233,6 +234,30 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
     this.searchError = null;
   }
 
+  // ── Crear nuevo EventFile ─────────────────────────────────────
+  openNewEventFile() {
+    const ref = this.dialog.open(AdminCatalogEventsProcessModalComponent, {
+      minWidth: '300px',
+      data: { eventUuid: this.eventId },
+    });
+
+    ref.closed.pipe(take(1)).subscribe((result) => {
+      if (!result) return;
+      const file = result as EventFileResponse;
+      this.allEventFiles = [...this.allEventFiles, file];
+
+      const delegationUuid = file.deletation?.uuid ?? file.delegation?.uuid;
+      if (!delegationUuid) return;
+
+      // Recargar delegaciones por si fue creada en el modal
+      this.delegationApiService.onList({ dependenceId: null, name: '' }).pipe(take(1)).subscribe(dels => {
+        this.delegations = dels;
+        this.selectedDelegationId = delegationUuid;
+        this.onDelegationChange();
+      });
+    });
+  }
+
   // ── Crear nueva delegación ────────────────────────────────────
   openCreateDelegation() {
     const ref = this.dialog.open(AdminCatalogDelegationsModalComponent, {
@@ -273,6 +298,7 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
     } else {
       this.saving = true;
       this.eventApiService.onSaveEventFile({
+        uuid:'',
         eventId: this.eventId,
         delegationId: this.selectedDelegationId,
         dependence_name: null,
