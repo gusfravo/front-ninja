@@ -15,7 +15,15 @@ export class AuthService {
   ) { }
 
   onSetToken(token: string): void {
-    this.cookieService.set('authToken', token, 1, '/', 'localhost', true, 'Strict',);
+    this.cookieService.set(
+        'authToken',
+  token,
+  1,
+  '/',
+  undefined,
+  false,
+  'Lax'
+    );
   }
 
   onGetToken(): string {
