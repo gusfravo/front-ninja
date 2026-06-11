@@ -104,4 +104,11 @@ export class EventApiService {
       this.secury,
     );
   }
+
+  public onExportByEvent(eventId: string) {
+    return this.http.get(
+      URL + ApiNinjaEndpoints.eventMemberExportEvent + eventId,
+      { context: new HttpContext().set(IS_TOKENENABLED, true), responseType: 'blob' as const },
+    );
+  }
 }

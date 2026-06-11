@@ -66,6 +66,14 @@
               >
                 Visualizar
               </a>
+              <button
+                (click)="downloadExcel(item)"
+                [disabled]="downloadingEventId === item.uuid"
+                class="rounded-md bg-green-600 px-3 py-1 text-white text-xs hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span *ngIf="downloadingEventId !== item.uuid">Excel</span>
+                <span *ngIf="downloadingEventId === item.uuid">Descargando...</span>
+              </button>
             </div>
           </div>
         }
