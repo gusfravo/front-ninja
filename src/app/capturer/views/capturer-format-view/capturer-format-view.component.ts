@@ -7,10 +7,34 @@ import { DependenceApiService } from '@admin/views/catalogs/shared/dependence-ap
 import { EventApiService } from '@admin/views/catalogs/shared/event-api.service';
 import { MemberApiService } from '@admin/views/catalogs/shared/member-api.service';
 import { DelegationResponse, DependenceResponse } from '@shared/interfaces';
+import { EventMemberAdditionalDataResponse } from '@shared/interfaces/event-member-additional-data.interface';
 import { EventFileResponse } from '@shared/interfaces/event-file.interface';
 import { EventMemberResponse } from '@shared/interfaces/event-member.interface';
 import { MemberResponse } from '@shared/interfaces/member.interface';
 import { Subject, debounceTime, distinctUntilChanged, of, switchMap, take, takeUntil } from 'rxjs';
+
+// ── Tipos de checkbox (campos que persisten como additional states) ─────────
+export type CheckboxField =
+  | 'trabajadorEstudiante'
+  | 'boletaOriginal' | 'constanciaOriginal' | 'reciboOriginal'
+  | 'sobrePago' | 'actaNacimiento' | 'boletaCopia' | 'constanciaCopia' | 'reciboCopia'
+  | 'constanciaCarta' | 'reciboCarta'
+  | 'exento';
+
+export const ADDITIONAL_STATE_KEYS: Record<CheckboxField, string> = {
+  trabajadorEstudiante: 'Trabajador Estudiante',
+  boletaOriginal:       'Boleta Original',
+  constanciaOriginal:   'Constancia Original',
+  reciboOriginal:       'Recibo Inscripción Original',
+  sobrePago:            'Sobre de Pago',
+  actaNacimiento:       'Acta Nacimiento',
+  boletaCopia:          'Boleta Copia',
+  constanciaCopia:      'Constancia Copia',
+  reciboCopia:          'Recibo Inscripción Copia',
+  constanciaCarta:      'Constancia o Boleta',
+  reciboCarta:          'Recibo Inscripción Carta',
+  exento:               'Exento de Inscripción',
+};
 
 export interface FormatMemberRow {
   member: EventMemberResponse;
@@ -28,21 +52,25 @@ export interface FormatMemberRow {
   exento: boolean;
 }
 
+function hasState(m: EventMemberResponse, key: string): boolean {
+  return m.additionalStates?.some(s => s.key === key && s.value) ?? false;
+}
+
 function toFormatRow(m: EventMemberResponse): FormatMemberRow {
   return {
     member: m,
-    trabajadorEstudiante: false,
-    boletaOriginal: false,
-    constanciaOriginal: false,
-    reciboOriginal: false,
-    sobrePago: false,
-    actaNacimiento: false,
-    boletaCopia: false,
-    constanciaCopia: false,
-    reciboCopia: false,
-    constanciaCarta: false,
-    reciboCarta: false,
-    exento: false,
+    trabajadorEstudiante: hasState(m, ADDITIONAL_STATE_KEYS.trabajadorEstudiante),
+    boletaOriginal:       hasState(m, ADDITIONAL_STATE_KEYS.boletaOriginal),
+    constanciaOriginal:   hasState(m, ADDITIONAL_STATE_KEYS.constanciaOriginal),
+    reciboOriginal:       hasState(m, ADDITIONAL_STATE_KEYS.reciboOriginal),
+    sobrePago:            hasState(m, ADDITIONAL_STATE_KEYS.sobrePago),
+    actaNacimiento:       hasState(m, ADDITIONAL_STATE_KEYS.actaNacimiento),
+    boletaCopia:          hasState(m, ADDITIONAL_STATE_KEYS.boletaCopia),
+    constanciaCopia:      hasState(m, ADDITIONAL_STATE_KEYS.constanciaCopia),
+    reciboCopia:          hasState(m, ADDITIONAL_STATE_KEYS.reciboCopia),
+    constanciaCarta:      hasState(m, ADDITIONAL_STATE_KEYS.constanciaCarta),
+    reciboCarta:          hasState(m, ADDITIONAL_STATE_KEYS.reciboCarta),
+    exento:               hasState(m, ADDITIONAL_STATE_KEYS.exento),
   };
 }
 
@@ -72,23 +100,7 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
   showDependenceDropdown = false;
   delegations: DelegationResponse[] = [];
 
-  readonly schoolLevels = [
-    'Educación Inicial',
-    'Preescolar',
-    'Primaria',
-    'Secundaria',
-    'Bachillerato',
-    'Preparatoria',
-    'Profesional Técnico',
-    'Técnico Superior Universitario (TSU)',
-    'Licenciatura',
-    'Ingeniería',
-    'Especialidad',
-    'Maestría',
-    'Doctorado',
-  ];
-
-  // Filas de la tabla (EventMembers)
+  // Filas de la tabla
   memberRows: FormatMemberRow[] = [];
   loadingMembers = false;
 
@@ -100,6 +112,13 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
   loadingSearch = false;
   addingMember = false;
   searchError: string | null = null;
+
+  readonly schoolLevels = [
+    'Educación Inicial', 'Preescolar', 'Primaria', 'Secundaria',
+    'Bachillerato', 'Preparatoria', 'Profesional Técnico',
+    'Técnico Superior Universitario (TSU)', 'Licenciatura',
+    'Ingeniería', 'Especialidad', 'Maestría', 'Doctorado',
+  ];
 
   private readonly searchInput$ = new Subject<string>();
   private readonly unsubscribe = new Subject<void>();
@@ -191,6 +210,7 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
       status: true,
     }).pipe(take(1)).subscribe({
       next: (result) => {
+        result.additionalStates = result.additionalStates ?? [];
         this.memberRows = [...this.memberRows, toFormatRow(result)];
         this.addingMember = false;
         this.resetSearch();
@@ -220,7 +240,6 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
 
     if (!this.selectedDelegationId) return;
 
-    // Cargar delegación completa (con dependence) para poder agregar miembros
     this.delegationApiService.onGet(this.selectedDelegationId).pipe(take(1)).subscribe(del => {
       this.selectedDelegation = del;
     });
@@ -254,7 +273,10 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
     this.loadingMembers = true;
     this.eventApiService.onListEventMembers(eventFileId).pipe(take(1)).subscribe({
       next: (members) => {
-        this.memberRows = members.map(toFormatRow);
+        this.memberRows = members.map(m => {
+          m.additionalStates = m.additionalStates ?? [];
+          return toFormatRow(m);
+        });
         this.loadingMembers = false;
       },
       error: () => { this.loadingMembers = false; }
@@ -304,11 +326,9 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ── Auto-guardado de campos del miembro ──────────────────────
+  // ── Campos de texto del miembro (auto-save en blur) ───────────
   saveField(row: FormatMemberRow, field: 'child_name' | 'school_level' | 'observations', value: string) {
-    const current = row.member[field] ?? '';
-    if (value === current) return;
-
+    if ((row.member[field] ?? '') === value) return;
     (row.member as any)[field] = value;
     this.persistMember(row.member);
   }
@@ -334,9 +354,51 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
     }).pipe(take(1)).subscribe({
       next: (result) => {
         const idx = this.memberRows.findIndex(r => r.member.uuid === result.uuid);
-        if (idx >= 0) this.memberRows[idx].member = result;
+        if (idx >= 0) {
+          result.additionalStates = this.memberRows[idx].member.additionalStates;
+          this.memberRows[idx].member = result;
+        }
       },
     });
+  }
+
+  // ── Additional states (checkboxes booleanos) ──────────────────
+  onCheckboxChange(row: FormatMemberRow, field: CheckboxField, checked: boolean) {
+    row[field] = checked;
+
+    const key = ADDITIONAL_STATE_KEYS[field];
+    const existing = this.findAdditionalState(row.member, key);
+
+    if (!checked) {
+      if (!existing?.uuid) return;
+      this.eventApiService.onDeleteEventMemberAdditional(existing.uuid)
+        .pipe(take(1))
+        .subscribe(() => {
+          row.member.additionalStates = (row.member.additionalStates ?? [])
+            .filter(s => s.uuid !== existing.uuid);
+        });
+      return;
+    }
+
+    this.eventApiService.onSaveEventMemberAdditional({
+      uuid: existing?.uuid,
+      eventMemberId: row.member.uuid,
+      key,
+      value: true,
+    }).pipe(take(1)).subscribe(result => {
+      const states = row.member.additionalStates ?? [];
+      const idx = states.findIndex(s => s.uuid === result.uuid);
+      row.member.additionalStates = idx >= 0
+        ? states.map(s => s.uuid === result.uuid ? result : s)
+        : [...states, result];
+    });
+  }
+
+  private findAdditionalState(
+    m: EventMemberResponse,
+    key: string,
+  ): EventMemberAdditionalDataResponse | undefined {
+    return (m.additionalStates ?? []).find(s => s.key === key);
   }
 
   ngOnDestroy() {

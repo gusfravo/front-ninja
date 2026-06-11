@@ -206,7 +206,9 @@
 
               <!-- Trabajador Estudiante -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.trabajadorEstudiante" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.trabajadorEstudiante"
+                  (change)="onCheckboxChange(row, 'trabajadorEstudiante', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
 
               <!-- Dependencia (del miembro) -->
@@ -228,50 +230,72 @@
 
               <!-- Original: Boleta -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.boletaOriginal" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.boletaOriginal"
+                  (change)="onCheckboxChange(row, 'boletaOriginal', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
               <!-- Original: Constancia -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.constanciaOriginal" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.constanciaOriginal"
+                  (change)="onCheckboxChange(row, 'constanciaOriginal', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
               <!-- Original: Recibo -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.reciboOriginal" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.reciboOriginal"
+                  (change)="onCheckboxChange(row, 'reciboOriginal', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
 
               <!-- Copia: Sobre de Pago -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.sobrePago" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.sobrePago"
+                  (change)="onCheckboxChange(row, 'sobrePago', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
               <!-- Copia: Acta Nacimiento -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.actaNacimiento" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.actaNacimiento"
+                  (change)="onCheckboxChange(row, 'actaNacimiento', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
               <!-- Copia: Boleta -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.boletaCopia" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.boletaCopia"
+                  (change)="onCheckboxChange(row, 'boletaCopia', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
               <!-- Copia: Constancia -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.constanciaCopia" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.constanciaCopia"
+                  (change)="onCheckboxChange(row, 'constanciaCopia', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
               <!-- Copia: Recibo -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.reciboCopia" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.reciboCopia"
+                  (change)="onCheckboxChange(row, 'reciboCopia', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
 
               <!-- Carta Compromiso: Constancia o Boleta -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.constanciaCarta" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.constanciaCarta"
+                  (change)="onCheckboxChange(row, 'constanciaCarta', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
               <!-- Carta Compromiso: Recibo -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.reciboCarta" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.reciboCarta"
+                  (change)="onCheckboxChange(row, 'reciboCarta', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
 
               <!-- Exento -->
               <td class="checkbox-cell">
-                <input type="checkbox" [(ngModel)]="row.exento" class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
+                <input type="checkbox" [checked]="row.exento"
+                  (change)="onCheckboxChange(row, 'exento', $any($event.target).checked)"
+                  class="w-3.5 h-3.5 accent-indigo-600 cursor-pointer">
               </td>
 
               <!-- Aprobado -->
