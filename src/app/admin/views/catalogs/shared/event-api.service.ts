@@ -111,4 +111,11 @@ export class EventApiService {
       { context: new HttpContext().set(IS_TOKENENABLED, true), responseType: 'blob' as const },
     );
   }
+
+  public onExportFormatted(eventFileId: string) {
+    return this.http.get(
+      URL + ApiNinjaEndpoints.eventMemberExportFormatted + eventFileId,
+      { context: new HttpContext().set(IS_TOKENENABLED, true), responseType: 'blob' as const },
+    );
+  }
 }

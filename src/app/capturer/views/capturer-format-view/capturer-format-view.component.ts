@@ -14,7 +14,7 @@ import { EventMemberAdditionalDataResponse } from '@shared/interfaces/event-memb
 import { EventFileResponse } from '@shared/interfaces/event-file.interface';
 import { EventMemberResponse } from '@shared/interfaces/event-member.interface';
 import { MemberResponse } from '@shared/interfaces/member.interface';
-import { Subject, debounceTime, distinctUntilChanged, of, switchMap, take, takeUntil } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, finalize, of, switchMap, take, takeUntil, tap } from 'rxjs';
 
 // ── Tipos de checkbox (campos que persisten como additional states) ─────────
 export type CheckboxField =
@@ -106,6 +106,9 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
   // Filas de la tabla
   memberRows: FormatMemberRow[] = [];
   loadingMembers = false;
+
+  // Descarga Excel formato
+  downloadingFormat = false;
 
   // Búsqueda de miembros
   searchTerm = '';
@@ -443,6 +446,26 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
     key: string,
   ): EventMemberAdditionalDataResponse | undefined {
     return (m.additionalStates ?? []).find(s => s.key === key);
+  }
+
+  downloadFormat() {
+    if (!this.eventFileId || this.downloadingFormat) return;
+    this.downloadingFormat = true;
+
+    const delegationName = this.selectedDelegation?.name ?? this.eventFileId;
+
+    this.eventApiService.onExportFormatted(this.eventFileId).pipe(
+      take(1),
+      tap((blob) => {
+        const url = window.URL.createObjectURL(blob as Blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = `formato-utiles-${delegationName}.xlsx`;
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      }),
+      finalize(() => { this.downloadingFormat = false; }),
+    ).subscribe({ error: () => { this.downloadingFormat = false; } });
   }
 
   ngOnDestroy() {
