@@ -32,6 +32,9 @@ export const adminRouter: Routes = [
         path: 'catalog/events',
         loadChildren: () => import('./views/catalogs/admin-catalog-events/admin-catalog-event-router.router').then(r => r.adminCatalogEventRouter)
       }, {
+        path: 'catalog/member',
+        loadComponent: () => import('./views/catalogs/admin-catalog-members/admin-catalog-members.component').then(c => c.AdminCatalogMembersComponent)
+      }, {
         path: 'catalog/delegation',
         loadComponent: () => import('./views/catalogs/admin-catalog-delegations/admin-catalog-delegations.component').then(c => c.AdminCatalogDelegationsComponent)
       }, {

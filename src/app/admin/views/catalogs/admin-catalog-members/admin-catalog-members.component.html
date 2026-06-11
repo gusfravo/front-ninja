@@ -1,0 +1,115 @@
+<div class="flex-1 flex flex-col">
+  <main class="p-6 space-y-6">
+
+    <!-- Barra superior -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-4 rounded-xl shadow">
+      <div class="flex items-center gap-2 flex-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+        </svg>
+        <input
+          type="text"
+          [(ngModel)]="filterName"
+          (ngModelChange)="onSearchChange()"
+          placeholder="Buscar por nombre o RFC..."
+          class="w-full max-w-sm rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+      </div>
+      <button
+        class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 shrink-0"
+        (click)="openModal()"
+      >+ Nuevo miembro</button>
+    </div>
+
+    <!-- Tabla -->
+    <div class="rounded-xl bg-white shadow overflow-x-auto">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead class="bg-slate-100 text-slate-700">
+          <tr>
+            <th class="px-4 py-3 border-b">#</th>
+            <th class="px-4 py-3 border-b">Nombre</th>
+            <th class="px-4 py-3 border-b">RFC</th>
+            <th class="px-4 py-3 border-b">Departamento</th>
+            <th class="px-4 py-3 border-b">Nómina</th>
+            <th class="px-4 py-3 border-b">Secretaría</th>
+            <th class="px-4 py-3 border-b text-center">Cuota</th>
+            <th class="px-4 py-3 border-b text-center">Estado</th>
+            <th class="px-4 py-3 border-b text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200">
+
+          <tr *ngIf="!memberList.length">
+            <td colspan="9" class="px-4 py-8 text-center text-slate-400">No se encontraron miembros.</td>
+          </tr>
+
+          <tr *ngFor="let item of memberList; let i = index" class="hover:bg-slate-50 transition-colors">
+            <td class="px-4 py-2 text-slate-500">{{ (page - 1) * limit + i + 1 }}</td>
+            <td class="px-4 py-2 font-medium text-slate-800">{{ item.full_name ?? item.fullName }}</td>
+            <td class="px-4 py-2 text-slate-600 font-mono text-xs">{{ item.rfc }}</td>
+            <td class="px-4 py-2 text-slate-600">{{ item.department ?? '—' }}</td>
+            <td class="px-4 py-2 text-slate-600">{{ item.nom ?? '—' }}</td>
+            <td class="px-4 py-2 text-slate-600">{{ item.secretary ?? '—' }}</td>
+            <td class="px-4 py-2 text-center">
+              <span [class]="item.contribution
+                ? 'rounded-full bg-indigo-100 text-indigo-700 px-2 py-0.5 text-xs font-medium'
+                : 'rounded-full bg-slate-100 text-slate-500 px-2 py-0.5 text-xs font-medium'">
+                {{ item.contribution ? 'Aporta' : 'No aporta' }}
+              </span>
+            </td>
+            <td class="px-4 py-2 text-center">
+              <span [class]="item.status
+                ? 'rounded-full bg-green-100 text-green-700 px-2 py-0.5 text-xs font-medium'
+                : 'rounded-full bg-yellow-100 text-yellow-700 px-2 py-0.5 text-xs font-medium'">
+                {{ item.status ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="px-4 py-2 text-center">
+              <div class="flex items-center justify-center gap-2">
+                <button class="rounded bg-blue-100 text-blue-600 px-3 py-1 text-xs hover:bg-blue-200" (click)="openModal(item)">Editar</button>
+                <button class="rounded bg-red-100 text-red-600 px-3 py-1 text-xs hover:bg-red-200" (click)="deleteMember(item.uuid)">Eliminar</button>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginador -->
+    <div *ngIf="totalPages > 0" class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white px-4 py-3 rounded-xl shadow text-sm text-slate-600">
+
+      <span>
+        Mostrando <span class="font-semibold text-slate-800">{{ (page - 1) * limit + 1 }}–{{ page * limit < total ? page * limit : total }}</span>
+        de <span class="font-semibold text-slate-800">{{ total }}</span> miembros
+      </span>
+
+      <div class="flex items-center gap-1">
+        <!-- Anterior -->
+        <button
+          (click)="goToPage(page - 1)"
+          [disabled]="page === 1"
+          class="rounded px-2 py-1 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed"
+        >‹</button>
+
+        <!-- Páginas -->
+        <button
+          *ngFor="let p of pages"
+          (click)="goToPage(p)"
+          [class]="p === page
+            ? 'rounded px-3 py-1 bg-indigo-600 text-white font-semibold'
+            : 'rounded px-3 py-1 hover:bg-slate-100'"
+        >{{ p }}</button>
+
+        <!-- Siguiente -->
+        <button
+          (click)="goToPage(page + 1)"
+          [disabled]="page === totalPages"
+          class="rounded px-2 py-1 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed"
+        >›</button>
+      </div>
+
+    </div>
+
+  </main>
+</div>

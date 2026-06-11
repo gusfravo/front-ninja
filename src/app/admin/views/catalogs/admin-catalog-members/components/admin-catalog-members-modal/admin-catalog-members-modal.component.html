@@ -1,0 +1,120 @@
+<div class="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 space-y-5">
+
+  <h2 class="text-lg font-semibold text-slate-800">
+    {{ isEdit ? 'Editar miembro' : 'Nuevo miembro' }}
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+    <div class="sm:col-span-2">
+      <label class="block text-xs font-medium text-slate-600 mb-1">Nombre completo *</label>
+      <input
+        type="text"
+        [(ngModel)]="form.full_name"
+        placeholder="Nombre completo"
+        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+      />
+    </div>
+
+    <div>
+      <label class="block text-xs font-medium text-slate-600 mb-1">RFC *</label>
+      <input
+        type="text"
+        [(ngModel)]="form.rfc"
+        placeholder="RFC"
+        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+      />
+    </div>
+
+    <div>
+      <label class="block text-xs font-medium text-slate-600 mb-1">Fecha de nacimiento</label>
+      <input
+        type="date"
+        [(ngModel)]="form.birth_date"
+        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+      />
+    </div>
+
+    <div>
+      <label class="block text-xs font-medium text-slate-600 mb-1">Departamento</label>
+      <input
+        type="text"
+        [(ngModel)]="form.department"
+        placeholder="Departamento"
+        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+      />
+    </div>
+
+    <div>
+      <label class="block text-xs font-medium text-slate-600 mb-1">Nómina</label>
+      <input
+        type="text"
+        [(ngModel)]="form.nom"
+        placeholder="Nómina"
+        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+      />
+    </div>
+
+    <div class="sm:col-span-2">
+      <label class="block text-xs font-medium text-slate-600 mb-1">Secretaría</label>
+      <input
+        type="text"
+        [(ngModel)]="form.secretary"
+        placeholder="Secretaría"
+        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+      />
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button
+        type="button"
+        (click)="form.contribution = !form.contribution"
+        [class]="form.contribution
+          ? 'w-10 h-6 rounded-full bg-indigo-600 relative transition-colors'
+          : 'w-10 h-6 rounded-full bg-slate-300 relative transition-colors'"
+      >
+        <span
+          [class]="form.contribution
+            ? 'absolute top-1 left-5 w-4 h-4 rounded-full bg-white transition-transform'
+            : 'absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform'"
+        ></span>
+      </button>
+      <label class="text-sm text-slate-700">Cuota sindical (aporta)</label>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button
+        type="button"
+        (click)="form.status = !form.status"
+        [class]="form.status
+          ? 'w-10 h-6 rounded-full bg-green-500 relative transition-colors'
+          : 'w-10 h-6 rounded-full bg-slate-300 relative transition-colors'"
+      >
+        <span
+          [class]="form.status
+            ? 'absolute top-1 left-5 w-4 h-4 rounded-full bg-white transition-transform'
+            : 'absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform'"
+        ></span>
+      </button>
+      <label class="text-sm text-slate-700">Activo</label>
+    </div>
+
+  </div>
+
+  <div *ngIf="!form.full_name || !form.rfc" class="text-xs text-red-500">
+    Nombre completo y RFC son obligatorios.
+  </div>
+
+  <div class="flex justify-end gap-3 pt-2">
+    <button
+      (click)="onCancel()"
+      class="rounded-md border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
+    >Cancelar</button>
+    <button
+      (click)="onSave()"
+      [disabled]="loading || !form.full_name || !form.rfc"
+      class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed"
+    >{{ loading ? 'Guardando...' : (isEdit ? 'Actualizar' : 'Crear') }}</button>
+  </div>
+
+</div>
