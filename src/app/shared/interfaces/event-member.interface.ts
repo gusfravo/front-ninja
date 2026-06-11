@@ -8,6 +8,8 @@ export interface EventMemberResponse {
   uuid: string,
   fullName: string,
   full_name: string,
+  child_name: string | null,
+  school_level: string | null,
   observations: string,
   approved: boolean,
   status: boolean,

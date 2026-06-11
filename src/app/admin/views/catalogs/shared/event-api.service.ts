@@ -64,6 +64,8 @@ export class EventApiService {
     memberId: string;
     dependenceId: string;
     full_name: string;
+    child_name?: string | null;
+    school_level?: string | null;
     observations: string;
     approved: boolean;
     status: boolean;
