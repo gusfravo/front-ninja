@@ -51,7 +51,7 @@ export class EventApiService {
     return this.http.get<EventFileResponse[]>(URL + ApiNinjaEndpoints.eventGetFileWithDeletations + data.eventId, this.secury)
   }
 
-  public onSaveEventFile(data: { eventId: string; delegationId: string; uuid?: string }) {
+  public onSaveEventFile(data: { eventId: string; delegationId: string; dependence_name?: string | null; uuid?: string }) {
     return this.http.post<EventFileResponse>(URL + ApiNinjaEndpoints.eventFileUpdate, data, this.secury)
   }
 
