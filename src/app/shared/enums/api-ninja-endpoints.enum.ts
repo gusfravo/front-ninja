@@ -35,4 +35,8 @@ export enum ApiNinjaEndpoints {
   roleUpdate = 'role/update',
   roleGet = 'role/get/',
   roleDelete = 'role/delete/',
+  userList = 'user/list',
+  userUpdate = 'user/update',
+  userGet = 'user/get/',
+  userDelete = 'user/delete/',
 }
