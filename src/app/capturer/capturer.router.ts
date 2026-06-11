@@ -22,6 +22,10 @@ export const capturerRouter: Routes = [
       {
         path: 'dashboard',
         loadComponent: () => import('./views/capturer-dashboard/capturer-dashboard.component').then(c => c.CapturerDashboardComponent)
+      },
+      {
+        path: 'format-view/:id',
+        loadComponent: () => import('./views/capturer-format-view/capturer-format-view.component').then(c => c.CapturerFormatViewComponent)
       }
     ]
   }

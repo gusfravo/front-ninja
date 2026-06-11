@@ -60,11 +60,12 @@
 
             <!-- Acciones -->
             <div class="flex gap-2 mt-4">
-              <button
-                class="rounded-md bg-blue-500 px-3 py-1 text-white text-xs hover:bg-blue-600"
+              <a
+                [routerLink]="['/capturer/platform/format-view', item.uuid]"
+                class="rounded-md bg-blue-500 px-3 py-1 text-white text-xs hover:bg-blue-600 inline-block"
               >
                 Visualizar
-              </button>
+              </a>
             </div>
           </div>
         }

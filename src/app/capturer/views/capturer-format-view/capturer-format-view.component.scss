@@ -1,0 +1,32 @@
+.format-table {
+  border-collapse: collapse;
+  font-size: 0.65rem;
+
+  th, td {
+    border: 1px solid #374151;
+    padding: 3px 5px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  th {
+    background-color: #dbeafe;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .th-group-original { background-color: #bbf7d0; }
+  .th-group-copia     { background-color: #fef9c3; }
+  .th-group-carta     { background-color: #fce7f3; }
+  .th-group-exento    { background-color: #ede9fe; }
+  .th-group-obs       { background-color: #e0f2fe; }
+
+  tbody tr:nth-child(even) td { background-color: #f8fafc; }
+  tbody tr:hover td           { background-color: #eff6ff; }
+
+  td.num { font-weight: 600; color: #1e40af; width: 28px; }
+  td.data-cell { min-width: 90px; }
+  td.checkbox-cell { width: 36px; }
+}

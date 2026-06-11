@@ -1,0 +1,150 @@
+<div class="min-h-screen bg-slate-100 p-6">
+
+  <!-- Contenedor documento -->
+  <div class="bg-white shadow-xl rounded-xl p-6 mx-auto">
+
+    <!-- Botón regresar -->
+    <div class="mb-4">
+      <a
+        [routerLink]="['/capturer/platform/dashboard']"
+        class="inline-flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+      >
+        ← Regresar al dashboard
+      </a>
+    </div>
+
+    <!-- Encabezado del documento -->
+    <div class="text-center mb-4 border border-gray-400 rounded p-3 bg-blue-50">
+      <p class="text-xs font-bold text-slate-600 tracking-widest uppercase">Secretaría de Actas y Acuerdos</p>
+      <h2 class="text-base font-extrabold text-slate-800 mt-1 uppercase tracking-wide">
+        Documentación de Útiles Escolares 2025
+      </h2>
+    </div>
+
+    <!-- Datos generales -->
+    <div class="flex flex-wrap gap-6 mb-4 text-sm">
+      <div class="flex items-center gap-2">
+        <span class="font-semibold text-slate-700">Dependencia:</span>
+        <div class="border-b border-slate-400 min-w-[200px] h-6"></div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-semibold text-slate-700">Clave Delegacional:</span>
+        <div class="border-b border-slate-400 min-w-[120px] h-6"></div>
+      </div>
+    </div>
+
+    <!-- Tabla principal - scroll horizontal -->
+    <div class="overflow-x-auto">
+      <table class="format-table w-full">
+        <thead>
+          <!-- Fila 1: Grupos principales -->
+          <tr>
+            <th rowspan="2" class="w-8">Nº</th>
+            <th rowspan="2" style="min-width:150px">
+              Nombre del Trabajador<br>
+              <span class="font-normal text-xs">(Apellido, orden alfabético)</span>
+            </th>
+            <th rowspan="2" style="min-width:150px">
+              Nombre del Hijo (a)<br>
+              <span class="font-normal text-xs">(Apellido, orden alfabético)</span>
+            </th>
+            <th rowspan="2" style="min-width:60px">Trabajador<br>Estudiante<br>(X)</th>
+            <th rowspan="2" style="min-width:90px">Dependencia</th>
+            <th rowspan="2" style="min-width:80px">Nivel<br>Escolar</th>
+
+            <!-- Documentación en Original -->
+            <th colspan="3" class="th-group-original">Documentación en Original</th>
+
+            <!-- Documentación en Copia -->
+            <th colspan="5" class="th-group-copia">Documentación en Copia</th>
+
+            <!-- Carta Compromiso -->
+            <th colspan="2" class="th-group-carta">Carta Compromiso</th>
+
+            <!-- Exento -->
+            <th rowspan="2" class="th-group-exento" style="min-width:60px">Exento de<br>Inscripción</th>
+
+            <!-- Observaciones -->
+            <th rowspan="2" class="th-group-obs" style="min-width:120px">Observaciones</th>
+          </tr>
+
+          <!-- Fila 2: Sub-columnas -->
+          <tr>
+            <!-- Original -->
+            <th class="th-group-original" style="min-width:60px">Boleta</th>
+            <th class="th-group-original" style="min-width:70px">Constancia</th>
+            <th class="th-group-original" style="min-width:80px">Recibo de<br>Inscripción</th>
+
+            <!-- Copia -->
+            <th class="th-group-copia" style="min-width:70px">Sobre de<br>Pago</th>
+            <th class="th-group-copia" style="min-width:80px">Acta<br>Nacimiento</th>
+            <th class="th-group-copia" style="min-width:60px">Boleta</th>
+            <th class="th-group-copia" style="min-width:70px">Constancia</th>
+            <th class="th-group-copia" style="min-width:80px">Recibo de<br>Inscripción</th>
+
+            <!-- Carta Compromiso -->
+            <th class="th-group-carta" style="min-width:90px">Constancia<br>o Boleta</th>
+            <th class="th-group-carta" style="min-width:80px">Recibo de<br>Inscripción</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (row of rows; track row) {
+            <tr>
+              <td class="num">{{ row }}</td>
+              <!-- Nombre trabajador -->
+              <td class="data-cell"></td>
+              <!-- Nombre hijo -->
+              <td class="data-cell"></td>
+              <!-- Trab. Estudiante -->
+              <td class="checkbox-cell"></td>
+              <!-- Dependencia -->
+              <td class="data-cell"></td>
+              <!-- Nivel Escolar -->
+              <td class="data-cell"></td>
+
+              <!-- Original: Boleta, Constancia, Recibo -->
+              <td class="checkbox-cell"></td>
+              <td class="checkbox-cell"></td>
+              <td class="checkbox-cell"></td>
+
+              <!-- Copia: Sobre, Acta, Boleta, Constancia, Recibo -->
+              <td class="checkbox-cell"></td>
+              <td class="checkbox-cell"></td>
+              <td class="checkbox-cell"></td>
+              <td class="checkbox-cell"></td>
+              <td class="checkbox-cell"></td>
+
+              <!-- Carta Compromiso: Const/Boleta, Recibo -->
+              <td class="checkbox-cell"></td>
+              <td class="checkbox-cell"></td>
+
+              <!-- Exento -->
+              <td class="checkbox-cell"></td>
+
+              <!-- Observaciones -->
+              <td class="data-cell"></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pie: firmas -->
+    <div class="flex justify-between mt-10 px-8 text-sm text-slate-700">
+      <div class="text-center">
+        <div class="border-t border-slate-500 pt-2 min-w-[220px]">
+          <p class="font-semibold">Firma del Responsable</p>
+          <p class="text-xs text-slate-500">Nombre y cargo</p>
+        </div>
+      </div>
+      <div class="text-center">
+        <div class="border-t border-slate-500 pt-2 min-w-[220px]">
+          <p class="font-semibold">Vo. Bo.</p>
+          <p class="text-xs text-slate-500">Secretaría de Actas y Acuerdos</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
