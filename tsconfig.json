@@ -27,6 +27,9 @@
       "@core/*": [
         "./src/app/core/*"
       ],
+      "@capturer/*": [
+        "./src/app/capturer/*"
+      ],
     },
   },
   "angularCompilerOptions": {
