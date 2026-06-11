@@ -44,6 +44,9 @@ export const adminRouter: Routes = [
         path: 'role',
         loadComponent: () => import('./views/admin-role/admin-role.component').then(c => c.AdminRoleComponent),
       }, {
+        path: 'role/update/:uuid',
+        loadComponent: () => import('./views/admin-role/components/admin-role-update/admin-role-update.component').then(c => c.AdminRoleUpdateComponent),
+      }, {
         path: 'excel',
         loadComponent: () => import('./views/admin-excel/admin-excel.component').then(c => c.AdminExcelComponent),
       }

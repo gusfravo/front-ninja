@@ -31,4 +31,8 @@ export enum ApiNinjaEndpoints {
   eventMemberAdditionalDelete = 'event-member-additional/delete/',
   eventMemberExport = 'event-member/export/',
   eventMemberExportEvent = 'event-member/export-event/',
+  roleList = 'role/list',
+  roleUpdate = 'role/update',
+  roleGet = 'role/get/',
+  roleDelete = 'role/delete/',
 }

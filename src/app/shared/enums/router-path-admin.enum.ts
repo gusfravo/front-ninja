@@ -3,5 +3,6 @@ export enum RouterPathAdmin {
   benefits = '/admin/platform/catalog/benefit',
   events = '/admin/platform/catalog/events',
   delegations = '/admin/platform/catalog/delegation',
-  workshop = '/admin/platform/catalog/events/workshop'
+  workshop = '/admin/platform/catalog/events/workshop',
+  roles = '/admin/platform/role'
 }
