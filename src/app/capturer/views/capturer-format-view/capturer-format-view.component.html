@@ -25,7 +25,16 @@
 
       <!-- Clave Delegacional -->
       <div class="flex flex-col gap-1">
-        <label class="font-semibold text-slate-700">Clave Delegacional:</label>
+        <div class="flex items-center justify-between">
+          <label class="font-semibold text-slate-700">Clave Delegacional:</label>
+          <button
+            type="button"
+            (click)="openCreateDelegation()"
+            class="text-xs text-indigo-600 hover:text-indigo-800 font-medium ml-3"
+          >
+            + Nueva
+          </button>
+        </div>
         <select
           [(ngModel)]="selectedDelegationId"
           (ngModelChange)="onDelegationChange()"

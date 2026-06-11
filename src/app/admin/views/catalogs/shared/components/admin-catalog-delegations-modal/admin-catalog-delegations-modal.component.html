@@ -6,6 +6,7 @@
   </div>
 
   <div class="space-y-4" [formGroup]="formGroup">
+
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Código</label>
       <input
@@ -38,6 +39,59 @@
         }
       </select>
     </div>
+
+    <!-- Titular (búsqueda de miembro) -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">
+        Titular <span class="text-slate-400 font-normal">(opcional)</span>
+      </label>
+
+      <!-- Miembro seleccionado -->
+      <div
+        *ngIf="selectedMember"
+        class="flex items-center justify-between rounded-md border border-indigo-300 bg-indigo-50 px-3 py-2 text-sm"
+      >
+        <span class="text-indigo-800 font-medium">{{ selectedMember.full_name }}</span>
+        <button
+          type="button"
+          (click)="clearMember()"
+          class="text-indigo-400 hover:text-indigo-700 ml-2 text-base leading-none"
+        >✕</button>
+      </div>
+
+      <!-- Input búsqueda (visible cuando no hay seleccionado) -->
+      <div *ngIf="!selectedMember" class="relative">
+        <input
+          type="text"
+          [(ngModel)]="memberSearchTerm"
+          [ngModelOptions]="{standalone: true}"
+          (ngModelChange)="onMemberSearchInput()"
+          (blur)="hideMemberDropdown()"
+          placeholder="Buscar por nombre..."
+          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-8"
+        />
+        <span
+          *ngIf="loadingMemberSearch"
+          class="absolute right-3 top-2.5 text-slate-400 text-xs"
+        >...</span>
+
+        <!-- Dropdown resultados -->
+        <ul
+          *ngIf="showMemberDropdown"
+          class="absolute z-10 left-0 right-0 mt-1 bg-white border border-slate-300 rounded-md shadow-lg max-h-48 overflow-y-auto"
+        >
+          <li
+            *ngFor="let m of memberResults"
+            (mousedown)="selectMember(m)"
+            class="px-3 py-2 text-sm cursor-pointer hover:bg-indigo-50 text-slate-700"
+          >
+            <span class="font-medium">{{ m.full_name }}</span>
+            <span *ngIf="m.nom" class="text-slate-400 text-xs ml-2">{{ m.nom }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
   </div>
 
   <div class="mt-6 flex justify-end gap-3">

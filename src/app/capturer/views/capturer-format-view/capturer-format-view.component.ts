@@ -2,6 +2,8 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { AdminCatalogDelegationsModalComponent } from '@admin/views/catalogs/shared/components/admin-catalog-delegations-modal/admin-catalog-delegations-modal.component';
 import { DelegationApiService } from '@admin/views/catalogs/shared/delegation-api.service';
 import { DependenceApiService } from '@admin/views/catalogs/shared/dependence-api.service';
 import { EventApiService } from '@admin/views/catalogs/shared/event-api.service';
@@ -76,7 +78,7 @@ function toFormatRow(m: EventMemberResponse): FormatMemberRow {
 
 @Component({
   selector: 'app-capturer-format-view',
-  imports: [RouterLink, FormsModule, NgFor, NgIf],
+  imports: [RouterLink, FormsModule, NgFor, NgIf, DialogModule],
   templateUrl: './capturer-format-view.component.html',
   styleUrl: './capturer-format-view.component.scss',
   standalone: true
@@ -125,6 +127,7 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly route: ActivatedRoute,
+    private readonly dialog: Dialog,
     private readonly eventApiService: EventApiService,
     private readonly dependenceApiService: DependenceApiService,
     private readonly delegationApiService: DelegationApiService,
@@ -228,6 +231,21 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
     this.searchResults = [];
     this.showSearchDropdown = false;
     this.searchError = null;
+  }
+
+  // ── Crear nueva delegación ────────────────────────────────────
+  openCreateDelegation() {
+    const ref = this.dialog.open(AdminCatalogDelegationsModalComponent, {
+      minWidth: '380px',
+    });
+
+    ref.closed.pipe(take(1)).subscribe((result) => {
+      if (!result) return;
+      const newDelegation = result as DelegationResponse;
+      this.delegations = [...this.delegations, newDelegation];
+      this.selectedDelegationId = newDelegation.uuid;
+      this.onDelegationChange();
+    });
   }
 
   // ── Delegación ────────────────────────────────────────────────
