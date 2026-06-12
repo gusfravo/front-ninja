@@ -57,6 +57,7 @@ export class AdminCatalogEventsProcessComponent {
         eventUuid: this.uuid,
         uuid: item.uuid,
         delegationUuid: item.deletation?.uuid ?? (item as any).delegation?.uuid,
+        dependenceUuid: item.dependence?.uuid ?? null,
       },
     });
 

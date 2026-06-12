@@ -1,4 +1,5 @@
 import { DelegationResponse } from "./delegation.interface";
+import { DependenceResponse } from "./dependence.interface";
 import { EventResponse } from "./event.interface";
 
 export interface EventFileResponse {
@@ -6,5 +7,6 @@ export interface EventFileResponse {
   event: EventResponse,
   delegation: DelegationResponse,
   deletation: DelegationResponse,
-  dependence_name: string | null
+  dependence_name: string | null,
+  dependence: DependenceResponse | null
 }
