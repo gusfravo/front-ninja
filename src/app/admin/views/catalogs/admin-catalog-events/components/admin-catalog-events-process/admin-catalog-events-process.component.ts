@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { EventFileResponse } from '@shared/interfaces';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Subject, finalize, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-admin-catalog-events-process',
@@ -21,6 +21,7 @@ import { Subject, takeUntil, tap } from 'rxjs';
 export class AdminCatalogEventsProcessComponent {
   unsubscribe = new Subject();
   instanceList: EventFileResponse[] = [];
+  downloadingFormatId: string | null = null;
   @Input() uuid!: string;
 
   constructor(
@@ -72,6 +73,24 @@ export class AdminCatalogEventsProcessComponent {
     this.eventMemberExcelApiService.downloadByEvent(this.uuid).pipe(
       takeUntil(this.unsubscribe),
     ).subscribe();
+  }
+
+  exportFormatExcel(item: EventFileResponse) {
+    if (this.downloadingFormatId) return;
+    this.downloadingFormatId = item.uuid;
+    const delegationName = item.deletation?.name ?? item.uuid;
+    this.eventApiService.onExportFormatted(item.uuid).pipe(
+      takeUntil(this.unsubscribe),
+      tap((blob) => {
+        const url = window.URL.createObjectURL(blob as Blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = `formato-utiles-${delegationName}.xlsx`;
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      }),
+      finalize(() => { this.downloadingFormatId = null; }),
+    ).subscribe({ error: () => { this.downloadingFormatId = null; } });
   }
 
   exportExcel(item: EventFileResponse) {

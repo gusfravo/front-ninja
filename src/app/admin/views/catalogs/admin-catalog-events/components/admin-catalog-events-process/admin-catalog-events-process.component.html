@@ -59,6 +59,11 @@
                     [routerLink]="'/admin/platform/catalog/events/workshop/file/'+uuid+'/'+item.uuid">Agregar agremiado</button>
                     <button class="rounded-md bg-amber-500 px-3 py-1 text-white text-xs hover:bg-amber-600"
                     (click)="exportExcel(item)">Exportar Excel</button>
+                    <button class="rounded-md bg-green-600 px-3 py-1 text-white text-xs hover:bg-green-700"
+                    [disabled]="downloadingFormatId === item.uuid"
+                    (click)="exportFormatExcel(item)">
+                      {{ downloadingFormatId === item.uuid ? 'Descargando...' : 'Excel Formato' }}
+                    </button>
                   </td>
                 </tr>
               }
