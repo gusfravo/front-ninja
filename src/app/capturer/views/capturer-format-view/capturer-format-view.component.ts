@@ -96,6 +96,7 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
   dependenceName = '';
   selectedDelegationId = '';
   selectedDelegation: DelegationResponse | null = null;
+  selectedDependenceId: string | null = null;
 
   // Catálogos
   dependences: DependenceResponse[] = [];
@@ -280,6 +281,7 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
   onDelegationChange() {
     this.eventFileId = null;
     this.dependenceName = '';
+    this.selectedDependenceId = null;
     this.memberRows = [];
     this.selectedDelegation = null;
     this.resetSearch();
@@ -297,6 +299,7 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
     if (existing) {
       this.eventFileId = existing.uuid;
       this.dependenceName = existing.dependence_name ?? '';
+      this.selectedDependenceId = existing.dependence?.uuid ?? null;
       this.loadMembers(existing.uuid);
     } else {
       this.saving = true;
@@ -325,6 +328,7 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
           return toFormatRow(m);
         });
         this.loadingMembers = false;
+        console.log('Members loaded', members);
       },
       error: () => { this.loadingMembers = false; }
     });
@@ -332,6 +336,7 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
 
   // ── Dependencia (autocomplete) ────────────────────────────────
   onDependenceInput() {
+    this.selectedDependenceId = null;
     const val = this.dependenceName.toLowerCase().trim();
     if (!val) { this.showDependenceDropdown = false; return; }
     this.filteredDependences = this.dependences.filter(d =>
@@ -342,6 +347,7 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
 
   selectDependence(dep: DependenceResponse) {
     this.dependenceName = dep.name;
+    this.selectedDependenceId = dep.uuid;
     this.showDependenceDropdown = false;
     this.autoSaveDependence();
   }
@@ -363,6 +369,7 @@ export class CapturerFormatViewComponent implements OnInit, OnDestroy {
       eventId: this.eventId,
       delegationId: this.selectedDelegationId,
       dependence_name: this.dependenceName || null,
+      dependenceId: this.selectedDependenceId,
     }).pipe(take(1)).subscribe({
       next: (file) => {
         const idx = this.allEventFiles.findIndex(f => f.uuid === file.uuid);

@@ -4,16 +4,18 @@ import { EventMemberExcelApiService } from '@admin/views/catalogs/shared/event-m
 import { NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { EventFileResponse } from '@shared/interfaces';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { DependenceResponse, EventFileResponse } from '@shared/interfaces';
+import { Subject, finalize, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'app-admin-catalog-events-process',
   imports: [
     RouterLink,
     NgIf,
-    DialogModule
+    DialogModule,
+    FormsModule,
   ],
   templateUrl: './admin-catalog-events-process.component.html',
   styleUrl: './admin-catalog-events-process.component.scss'
@@ -21,7 +23,25 @@ import { Subject, takeUntil, tap } from 'rxjs';
 export class AdminCatalogEventsProcessComponent {
   unsubscribe = new Subject();
   instanceList: EventFileResponse[] = [];
+  downloadingFormatId: string | null = null;
   @Input() uuid!: string;
+
+  // Modal descarga por dependencia
+  showDependenceModal = false;
+  selectedDependenceIdForExcel = '';
+  downloadingDependence = false;
+
+  get availableDependences(): DependenceResponse[] {
+    const seen = new Set<string>();
+    const result: DependenceResponse[] = [];
+    for (const file of this.instanceList) {
+      if (file.dependence && !seen.has(file.dependence.uuid)) {
+        seen.add(file.dependence.uuid);
+        result.push(file.dependence);
+      }
+    }
+    return result;
+  }
 
   constructor(
     private readonly eventApiService: EventApiService,
@@ -56,6 +76,7 @@ export class AdminCatalogEventsProcessComponent {
         eventUuid: this.uuid,
         uuid: item.uuid,
         delegationUuid: item.deletation?.uuid ?? (item as any).delegation?.uuid,
+        dependenceUuid: item.dependence?.uuid ?? null,
       },
     });
 
@@ -68,10 +89,53 @@ export class AdminCatalogEventsProcessComponent {
     });
   }
 
+  openDependenceModal() {
+    this.selectedDependenceIdForExcel = '';
+    this.showDependenceModal = true;
+  }
+
+  closeDependenceModal() {
+    this.showDependenceModal = false;
+    this.selectedDependenceIdForExcel = '';
+  }
+
+  exportByDependence() {
+    if (!this.selectedDependenceIdForExcel || this.downloadingDependence) return;
+    const dep = this.availableDependences.find(d => d.uuid === this.selectedDependenceIdForExcel);
+    if (!dep) return;
+    this.downloadingDependence = true;
+    this.eventMemberExcelApiService
+      .downloadByEventAndDependence(this.uuid, dep.uuid, dep.name, () => {
+        this.downloadingDependence = false;
+        this.showDependenceModal = false;
+        this.selectedDependenceIdForExcel = '';
+      })
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe({ error: () => { this.downloadingDependence = false; } });
+  }
+
   exportGeneralExcel() {
     this.eventMemberExcelApiService.downloadByEvent(this.uuid).pipe(
       takeUntil(this.unsubscribe),
     ).subscribe();
+  }
+
+  exportFormatExcel(item: EventFileResponse) {
+    if (this.downloadingFormatId) return;
+    this.downloadingFormatId = item.uuid;
+    const delegationName = item.deletation?.name ?? item.uuid;
+    this.eventApiService.onExportFormatted(item.uuid).pipe(
+      takeUntil(this.unsubscribe),
+      tap((blob) => {
+        const url = window.URL.createObjectURL(blob as Blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = `formato-utiles-${delegationName}.xlsx`;
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      }),
+      finalize(() => { this.downloadingFormatId = null; }),
+    ).subscribe({ error: () => { this.downloadingFormatId = null; } });
   }
 
   exportExcel(item: EventFileResponse) {

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { IS_TOKENENABLED } from '@core/auth/context/auth.context';
 import { URL as API_URL } from '@shared/constants/url.constant';
 import { ApiNinjaEndpoints } from '@shared/enums/api-ninja-endpoints.enum';
-import { tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class EventMemberExcelApiService {
@@ -44,6 +44,28 @@ export class EventMemberExcelApiService {
           anchor.click();
           window.URL.revokeObjectURL(objectUrl);
         }),
+      );
+  }
+
+  downloadByEventAndDependence(
+    eventId: string,
+    dependenceId: string,
+    dependenceName: string,
+    onFinalize?: () => void,
+  ) {
+    const url = `${API_URL}${ApiNinjaEndpoints.eventMemberExportEventDependence}${eventId}/dependence/${dependenceId}`;
+    return this.http
+      .get(url, { ...this.secury, responseType: 'blob' })
+      .pipe(
+        tap((blob) => {
+          const objectUrl = window.URL.createObjectURL(blob);
+          const anchor = document.createElement('a');
+          anchor.href = objectUrl;
+          anchor.download = `agremiados-${dependenceName}.xlsx`;
+          anchor.click();
+          window.URL.revokeObjectURL(objectUrl);
+        }),
+        finalize(() => onFinalize?.()),
       );
   }
 }

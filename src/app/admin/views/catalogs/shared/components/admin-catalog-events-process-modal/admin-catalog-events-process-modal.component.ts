@@ -2,9 +2,10 @@ import { Component, inject } from '@angular/core';
 import { DIALOG_DATA, Dialog, DialogRef, DialogModule } from '@angular/cdk/dialog';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DelegationRequestList, DelegationResponse } from '@shared/interfaces';
+import { DelegationRequestList, DelegationResponse, DependenceResponse } from '@shared/interfaces';
 import { Subject, takeUntil, tap } from 'rxjs';
 import { DelegationApiService } from '../../delegation-api.service';
+import { DependenceApiService } from '../../dependence-api.service';
 import { EventApiService } from '../../event-api.service';
 import { AdminCatalogDelegationsModalComponent } from '../admin-catalog-delegations-modal/admin-catalog-delegations-modal.component';
 
@@ -15,24 +16,28 @@ import { AdminCatalogDelegationsModalComponent } from '../admin-catalog-delegati
   styleUrl: './admin-catalog-events-process-modal.component.scss'
 })
 export class AdminCatalogEventsProcessModalComponent {
-  private readonly data = inject<{ eventUuid: string; uuid?: string; delegationUuid?: string }>(DIALOG_DATA);
+  private readonly data = inject<{ eventUuid: string; uuid?: string; delegationUuid?: string; dependenceUuid?: string }>(DIALOG_DATA);
   private readonly dialogRef = inject(DialogRef);
   private readonly dialog = inject(Dialog);
   private readonly unsubscribe = new Subject<void>();
 
   delegationList: DelegationResponse[] = [];
   selectedDelegationId = '';
+  dependenceList: DependenceResponse[] = [];
+  selectedDependenceId = '';
   loading = false;
 
   private readonly listFilter: DelegationRequestList = { dependenceId: null, name: '' };
 
   constructor(
     private readonly delegationApiService: DelegationApiService,
+    private readonly dependenceApiService: DependenceApiService,
     private readonly eventApiService: EventApiService,
   ) {}
 
   ngOnInit() {
     this.loadDelegations();
+    this.loadDependences();
   }
 
   get isEdit(): boolean {
@@ -46,6 +51,18 @@ export class AdminCatalogEventsProcessModalComponent {
         this.delegationList = data;
         if (this.data?.delegationUuid) {
           this.selectedDelegationId = this.data.delegationUuid;
+        }
+      })
+    ).subscribe();
+  }
+
+  loadDependences() {
+    this.dependenceApiService.onList().pipe(
+      takeUntil(this.unsubscribe),
+      tap(data => {
+        this.dependenceList = data;
+        if (this.data?.dependenceUuid) {
+          this.selectedDependenceId = this.data.dependenceUuid;
         }
       })
     ).subscribe();
@@ -72,10 +89,11 @@ export class AdminCatalogEventsProcessModalComponent {
     if (!this.selectedDelegationId) return;
     this.loading = true;
 
-    const payload: { eventId: string; delegationId: string; uuid?: string } = {
-      uuid:'',
+    const payload: { eventId: string; delegationId: string; dependenceId?: string | null; uuid?: string } = {
+      uuid: '',
       eventId: this.data.eventUuid,
       delegationId: this.selectedDelegationId,
+      dependenceId: this.selectedDependenceId || null,
     };
 
     if (this.isEdit) payload['uuid'] = this.data.uuid;

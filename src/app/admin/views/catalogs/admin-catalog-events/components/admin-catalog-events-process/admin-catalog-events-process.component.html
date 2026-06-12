@@ -30,6 +30,10 @@
               (click)="exportGeneralExcel()"
             >Descargar Excel general</button>
             <button
+              class="rounded-md bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+              (click)="openDependenceModal()"
+            >Excel por dependencia</button>
+            <button
               class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
               (click)="openNewModal()"
             >+ Nueva entrada</button>
@@ -59,6 +63,11 @@
                     [routerLink]="'/admin/platform/catalog/events/workshop/file/'+uuid+'/'+item.uuid">Agregar agremiado</button>
                     <button class="rounded-md bg-amber-500 px-3 py-1 text-white text-xs hover:bg-amber-600"
                     (click)="exportExcel(item)">Exportar Excel</button>
+                    <button class="rounded-md bg-green-600 px-3 py-1 text-white text-xs hover:bg-green-700"
+                    [disabled]="downloadingFormatId === item.uuid"
+                    (click)="exportFormatExcel(item)">
+                      {{ downloadingFormatId === item.uuid ? 'Descargando...' : 'Excel Formato' }}
+                    </button>
                   </td>
                 </tr>
               }
@@ -68,3 +77,49 @@
         </div>
       </main>
     </div>
+
+<!-- Modal selección de dependencia para Excel -->
+<div *ngIf="showDependenceModal"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+  <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
+
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold text-gray-800">Excel por dependencia</h2>
+      <button class="text-gray-500 hover:text-gray-700 text-xl leading-none"
+              (click)="closeDependenceModal()">✕</button>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Dependencia</label>
+      @if (availableDependences.length === 0) {
+        <p class="text-sm text-amber-600">Ningún registro tiene dependencia asignada.</p>
+      } @else {
+        <select
+          [(ngModel)]="selectedDependenceIdForExcel"
+          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+        >
+          <option value="" disabled>-- Selecciona una dependencia --</option>
+          @for (dep of availableDependences; track dep.uuid) {
+            <option [value]="dep.uuid">{{ dep.name }}</option>
+          }
+        </select>
+      }
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <button
+        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm"
+        (click)="closeDependenceModal()"
+        [disabled]="downloadingDependence"
+      >Cancelar</button>
+      <button
+        class="px-4 py-2 rounded-lg bg-teal-600 text-white hover:bg-teal-700 text-sm disabled:opacity-50"
+        (click)="exportByDependence()"
+        [disabled]="!selectedDependenceIdForExcel || downloadingDependence || availableDependences.length === 0"
+      >
+        {{ downloadingDependence ? 'Descargando...' : 'Descargar Excel' }}
+      </button>
+    </div>
+
+  </div>
+</div>
