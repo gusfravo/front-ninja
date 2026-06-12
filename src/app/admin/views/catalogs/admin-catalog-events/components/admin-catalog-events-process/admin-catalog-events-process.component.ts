@@ -4,8 +4,9 @@ import { EventMemberExcelApiService } from '@admin/views/catalogs/shared/event-m
 import { NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { EventFileResponse } from '@shared/interfaces';
+import { DependenceResponse, EventFileResponse } from '@shared/interfaces';
 import { Subject, finalize, takeUntil, tap } from 'rxjs';
 
 @Component({
@@ -13,7 +14,8 @@ import { Subject, finalize, takeUntil, tap } from 'rxjs';
   imports: [
     RouterLink,
     NgIf,
-    DialogModule
+    DialogModule,
+    FormsModule,
   ],
   templateUrl: './admin-catalog-events-process.component.html',
   styleUrl: './admin-catalog-events-process.component.scss'
@@ -23,6 +25,23 @@ export class AdminCatalogEventsProcessComponent {
   instanceList: EventFileResponse[] = [];
   downloadingFormatId: string | null = null;
   @Input() uuid!: string;
+
+  // Modal descarga por dependencia
+  showDependenceModal = false;
+  selectedDependenceIdForExcel = '';
+  downloadingDependence = false;
+
+  get availableDependences(): DependenceResponse[] {
+    const seen = new Set<string>();
+    const result: DependenceResponse[] = [];
+    for (const file of this.instanceList) {
+      if (file.dependence && !seen.has(file.dependence.uuid)) {
+        seen.add(file.dependence.uuid);
+        result.push(file.dependence);
+      }
+    }
+    return result;
+  }
 
   constructor(
     private readonly eventApiService: EventApiService,
@@ -68,6 +87,31 @@ export class AdminCatalogEventsProcessComponent {
         if (idx !== -1) this.instanceList[idx] = updated;
       }
     });
+  }
+
+  openDependenceModal() {
+    this.selectedDependenceIdForExcel = '';
+    this.showDependenceModal = true;
+  }
+
+  closeDependenceModal() {
+    this.showDependenceModal = false;
+    this.selectedDependenceIdForExcel = '';
+  }
+
+  exportByDependence() {
+    if (!this.selectedDependenceIdForExcel || this.downloadingDependence) return;
+    const dep = this.availableDependences.find(d => d.uuid === this.selectedDependenceIdForExcel);
+    if (!dep) return;
+    this.downloadingDependence = true;
+    this.eventMemberExcelApiService
+      .downloadByEventAndDependence(this.uuid, dep.uuid, dep.name, () => {
+        this.downloadingDependence = false;
+        this.showDependenceModal = false;
+        this.selectedDependenceIdForExcel = '';
+      })
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe({ error: () => { this.downloadingDependence = false; } });
   }
 
   exportGeneralExcel() {

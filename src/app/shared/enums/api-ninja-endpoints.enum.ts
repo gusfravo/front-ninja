@@ -32,6 +32,7 @@ export enum ApiNinjaEndpoints {
   eventMemberExport = 'event-member/export/',
   eventMemberExportEvent = 'event-member/export-event/',
   eventMemberExportFormatted = 'event-member/export-formatted/',
+  eventMemberExportEventDependence = 'event-member/export-event/',
   roleList = 'role/list',
   roleUpdate = 'role/update',
   roleGet = 'role/get/',
